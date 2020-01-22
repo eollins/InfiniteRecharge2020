@@ -8,17 +8,20 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.RobotMap;
 
-/**
- * Add your docs here.
- */
+//Includes functions for both arcade drive and tank drive control.
 public class DriveTrain extends Subsystem {
   @Override
   public void initDefaultCommand() {
     
   }
 
-  public void arcadeDrive(double x, double y) {
-    
+  public static void arcadeDrive(double x, double y) {
+    RobotMap.robotDrive.arcadeDrive(x, y);
+  }
+
+  public static void tankDrive(double x, double y) {
+    RobotMap.robotDrive.tankDrive(x, y);
   }
 }

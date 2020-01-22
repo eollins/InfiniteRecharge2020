@@ -23,6 +23,14 @@ public class RobotMap {
   public static SpeedController backLeft;
   public static SpeedController backRight;
 
+  //Joystick button mappings
+  public static final int reverseButton = 1;
+  public static final int arcadeToTank = 2;
+  public static final int tankToArcade = 2;
+
+  public static int driveMode = 0;
+  public static int reverse = 0;
+
   public static void init() {
     frontLeft = new Talon(frontLeftMotor);
     frontRight = new Talon(frontRightMotor);
