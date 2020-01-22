@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.RobotDrive;
 
 public class RobotMap {
   //Speed controller port mappings
@@ -15,8 +16,23 @@ public class RobotMap {
   public static final int primaryJoystick = 5;
   public static final int secondaryJoystick = 6;
 
+  //Motor instances and drive train
+  public static RobotDrive robotDrive;
   public static SpeedController frontLeft;
   public static SpeedController frontRight;
   public static SpeedController backLeft;
   public static SpeedController backRight;
+
+  public static void init() {
+    frontLeft = new Talon(frontLeftMotor);
+    frontRight = new Talon(frontRightMotor);
+    backLeft = new Talon(backLeftMotor);
+    backRight = new Talon(backRightMotor);
+
+    robotDrive = new RobotDrive(frontLeft, backLeft, frontRight, backRight);
+    frontLeft.setInverted(false);
+    frontRight.setInverted(false);
+    backLeft.setInverted(false);
+    backRight.setInverted(false);
+  }
 }
