@@ -7,12 +7,21 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import edu.wpi.first.wpilibj2.command.Subsystem;
+//test
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -20,8 +29,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-
+  private Subsystem driveTrain;
   private RobotContainer m_robotContainer;
 
   /**
@@ -34,7 +42,16 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    Constants.test = new VictorSPX(1);
+    Constants.frontLeft = new TalonSRX(Constants.frontLeftMotor);
+    Constants.backLeft = new TalonSRX(Constants.backLeftMotor);
+    Constants.frontRight = new TalonSRX(Constants.frontRightMotor);
+    Constants.backRight = new TalonSRX(Constants.backRightMotor);
+    Constants.elevator = new VictorSP(Constants.elevatorMotor);
+
+    Constants.xBoxController = new XboxController(Constants.xBoxControllerPort);
+
+    Constants.joystickPrimary = new Joystick(Constants.primaryJoystick);
+    Constants.joystickSecondary = new Joystick(Constants.secondaryJoystick);
   }
 
   /**
@@ -72,9 +89,9 @@ public class Robot extends TimedRobot {
     //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.schedule();
+    // }
   }
 
   /**
@@ -90,9 +107,9 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.cancel();
+    // }
   }
 
   /**
@@ -100,6 +117,29 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    TalonSRX frontLeft = Constants.frontLeft;
+    TalonSRX frontRight = Constants.frontRight;
+    TalonSRX backLeft = Constants.backLeft;
+    TalonSRX backRight = Constants.backRight;
+    VictorSP elevator = Constants.elevator;
+
+    double xPosition = Constants.joystickPrimary.getRawAxis(0);
+    double yPosition = Constants.joystickSecondary.getRawAxis(1);
+    
+    double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
+    double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
+
+    frontLeft.set(ControlMode.PercentOutput, xPosition);
+    frontRight.set(ControlMode.PercentOutput, xPosition);
+    backLeft.set(ControlMode.PercentOutput, yPosition);
+    backRight.set(ControlMode.PercentOutput, yPosition);
+    
+    if (xBoxPosition > leftPosition) {
+      elevator.set(xBoxPosition);
+    }
+    else {
+      elevator.set(leftPosition * -1);
+    }
   }
 
   @Override
