@@ -42,10 +42,10 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    Constants.frontLeft = new TalonSRX(Constants.frontLeftMotor);
-    Constants.backLeft = new TalonSRX(Constants.backLeftMotor);
-    Constants.frontRight = new TalonSRX(Constants.frontRightMotor);
-    Constants.backRight = new TalonSRX(Constants.backRightMotor);
+    Constants.frontLeft = new VictorSPX(Constants.frontLeftMotor);
+    Constants.backLeft = new VictorSPX(Constants.backLeftMotor);
+    Constants.frontRight = new VictorSPX(Constants.frontRightMotor);
+    Constants.backRight = new VictorSPX(Constants.backRightMotor);
     Constants.elevator = new VictorSP(Constants.elevatorMotor);
 
     Constants.xBoxController = new XboxController(Constants.xBoxControllerPort);
@@ -117,22 +117,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    TalonSRX frontLeft = Constants.frontLeft;
-    TalonSRX frontRight = Constants.frontRight;
-    TalonSRX backLeft = Constants.backLeft;
-    TalonSRX backRight = Constants.backRight;
+    VictorSPX frontLeft = Constants.frontLeft;
+    VictorSPX frontRight = Constants.frontRight;
+    VictorSPX backLeft = Constants.backLeft;
+    VictorSPX backRight = Constants.backRight;
     VictorSP elevator = Constants.elevator;
 
-    double xPosition = Constants.joystickPrimary.getRawAxis(0);
-    double yPosition = Constants.joystickSecondary.getRawAxis(1);
+    double primaryY = Constants.joystickPrimary.getRawAxis(1) * -1;
+    double secondaryY = Constants.joystickSecondary.getRawAxis(1);
     
     double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
     double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
-    frontLeft.set(ControlMode.PercentOutput, xPosition);
-    frontRight.set(ControlMode.PercentOutput, xPosition);
-    backLeft.set(ControlMode.PercentOutput, yPosition);
-    backRight.set(ControlMode.PercentOutput, yPosition);
+    frontLeft.set(ControlMode.PercentOutput, primaryY);
+    frontRight.set(ControlMode.PercentOutput, secondaryY);
+    backLeft.set(ControlMode.PercentOutput, primaryY);
+    backRight.set(ControlMode.PercentOutput, secondaryY);
     
     if (xBoxPosition > leftPosition) {
       elevator.set(xBoxPosition);

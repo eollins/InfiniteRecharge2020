@@ -30,10 +30,10 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
  */
 public final class Constants {
   //Motor CAN address mappings
-  public static final int frontLeftMotor = 0;
-  public static final int frontRightMotor = 1;
+  public static final int frontLeftMotor = 1;
+  public static final int frontRightMotor = 3;
   public static final int backLeftMotor = 2;
-  public static final int backRightMotor = 3;
+  public static final int backRightMotor = 4;
   public static final int elevatorMotor = 0;
   
   //Joystick port mappings
@@ -46,10 +46,10 @@ public final class Constants {
   public static final int encoderChannelB = 8;
 
   //Motor instances and drive train
-  public static TalonSRX frontLeft;
-  public static TalonSRX frontRight;
-  public static TalonSRX backLeft;
-  public static TalonSRX backRight;
+  public static VictorSPX frontLeft;
+  public static VictorSPX frontRight;
+  public static VictorSPX backLeft;
+  public static VictorSPX backRight;
   public static VictorSP elevator;
   public static Encoder encoder;
 
