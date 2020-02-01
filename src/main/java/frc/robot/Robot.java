@@ -152,16 +152,26 @@ public class Robot extends TimedRobot {
     VictorSPX backRight = Constants.backRight;
     VictorSP elevator = Constants.elevator;
 
-    double primaryY = Constants.joystickPrimary.getRawAxis(1) * -1;
+    double primaryX = Constants.joystickPrimary.getRawAxis(0);
+    double primaryY = Constants.joystickPrimary.getRawAxis(1);
     double secondaryY = Constants.joystickSecondary.getRawAxis(1);
     
     double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
     double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
-    frontLeft.set(ControlMode.PercentOutput, primaryY);
-    frontRight.set(ControlMode.PercentOutput, secondaryY);
-    backLeft.set(ControlMode.PercentOutput, primaryY);
-    backRight.set(ControlMode.PercentOutput, secondaryY);
+    if (Constants.driveMode == 0) {
+      frontLeft.set(ControlMode.PercentOutput, primaryY - primaryX);
+      frontRight.set(ControlMode.PercentOutput, primaryY - primaryX);
+      backLeft.set(ControlMode.PercentOutput, primaryY - primaryX);
+      backRight.set(ControlMode.PercentOutput, primaryY - primaryX);
+    }
+    else {
+      primaryY *= -1;
+      frontLeft.set(ControlMode.PercentOutput, primaryY);
+      frontRight.set(ControlMode.PercentOutput, secondaryY);
+      backLeft.set(ControlMode.PercentOutput, primaryY);
+      backRight.set(ControlMode.PercentOutput, secondaryY);
+    }
     
     if (xBoxPosition > leftPosition) {
       elevator.set(xBoxPosition);
