@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -47,11 +49,14 @@ public class Robot extends TimedRobot {
     Constants.frontRight = new VictorSPX(Constants.frontRightMotor);
     Constants.backRight = new VictorSPX(Constants.backRightMotor);
     Constants.elevator = new VictorSP(Constants.elevatorMotor);
-
     Constants.xBoxController = new XboxController(Constants.xBoxControllerPort);
-
     Constants.joystickPrimary = new Joystick(Constants.primaryJoystick);
     Constants.joystickSecondary = new Joystick(Constants.secondaryJoystick);
+    Constants.encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
+  
+    Constants.encoder.setDistancePerPulse(4./256.);
+    Constants.encoder.setMaxPeriod(.1);
+    Constants.encoder.setMinRate(10);
   }
 
   /**
@@ -140,6 +145,8 @@ public class Robot extends TimedRobot {
     else {
       elevator.set(leftPosition * -1);
     }
+
+    SmartDashboard.putString("Encoder value", String.valueOf(Constants.encoder.getRate()));
   }
 
   @Override
