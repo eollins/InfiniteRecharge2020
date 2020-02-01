@@ -7,16 +7,11 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -35,6 +30,7 @@ public final class Constants {
   public static final int backLeftMotor = 2;
   public static final int backRightMotor = 4;
   public static final int elevatorMotor = 0;
+  public static final int intakeMotorPort = 1;
   
   //Joystick port mappings
   public static final int primaryJoystick = 0;
@@ -51,6 +47,7 @@ public final class Constants {
   public static VictorSPX backLeft;
   public static VictorSPX backRight;
   public static VictorSP elevator;
+  public static VictorSP intakeMotor;
   public static Encoder encoder;
 
   //Joystick objects
@@ -62,8 +59,12 @@ public final class Constants {
   public static final int reverseButton = 1;
   public static final int arcadeToTank = 2;
   public static final int tankToArcade = 2;
+  public static final int intakeForward = 0;
+  public static final int intakeBackward = 0;
 
   //Status/mode information
   public static int driveMode = 0;
   public static int reverse = 0;
+  public static double intakePower = 1;
+  public static boolean intakeStatus = false;
 }

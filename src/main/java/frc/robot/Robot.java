@@ -8,21 +8,18 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //test
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,6 +36,7 @@ public class Robot extends TimedRobot {
   private VictorSPX frontRight;
   private VictorSPX backRight;
   private VictorSP elevator;
+  private VictorSP intakeMotor;
 
   private Joystick primaryJoystick;
   private Joystick secondaryJoystick;
@@ -66,6 +64,8 @@ public class Robot extends TimedRobot {
     Constants.backRight = backRight;
     elevator = new VictorSP(Constants.elevatorMotor);
     Constants.elevator = elevator;
+    intakeMotor = new VictorSP(Constants.intakeMotorPort);
+    Constants.intakeMotor = intakeMotor;
 
     primaryJoystick = new Joystick(Constants.primaryJoystick);
     Constants.joystickPrimary = primaryJoystick;
@@ -73,6 +73,11 @@ public class Robot extends TimedRobot {
     Constants.joystickSecondary = secondaryJoystick;
     xBoxController = new XboxController(Constants.xBoxControllerPort);
     Constants.xBoxController = xBoxController;
+
+    JoystickButton intakeToggleForward = new JoystickButton(xBoxController, Constants.intakeForward);
+    JoystickButton intakeToggleBackward = new JoystickButton(xBoxController, Constants.intakeBackward);
+    intakeToggleForward.whenPressed(new ToggleIntake(true));
+    intakeToggleBackward.whenPressed(new ToggleIntake(false));
 
     encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
     Constants.encoder = encoder;
@@ -165,7 +170,8 @@ public class Robot extends TimedRobot {
       elevator.set(leftPosition * -1);
     }
 
-    SmartDashboard.putString("Encoder value", String.valueOf(Constants.encoder.getRate()));
+    SmartDashboard.putString("Direction", String.valueOf(encoder.getDirection()));
+    SmartDashboard.putString("Distance", String.valueOf(encoder.getDistance()));
   }
 
   @Override
