@@ -34,6 +34,18 @@ public class Robot extends TimedRobot {
   private Subsystem driveTrain;
   private RobotContainer m_robotContainer;
 
+  private VictorSPX frontLeft;
+  private VictorSPX backLeft;
+  private VictorSPX frontRight;
+  private VictorSPX backRight;
+  private VictorSP elevator;
+
+  private Joystick primaryJoystick;
+  private Joystick secondaryJoystick;
+  private XboxController xBoxController;
+
+  private Encoder encoder;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -44,19 +56,26 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    Constants.frontLeft = new VictorSPX(Constants.frontLeftMotor);
-    Constants.backLeft = new VictorSPX(Constants.backLeftMotor);
-    Constants.frontRight = new VictorSPX(Constants.frontRightMotor);
-    Constants.backRight = new VictorSPX(Constants.backRightMotor);
-    Constants.elevator = new VictorSP(Constants.elevatorMotor);
-    Constants.xBoxController = new XboxController(Constants.xBoxControllerPort);
-    Constants.joystickPrimary = new Joystick(Constants.primaryJoystick);
-    Constants.joystickSecondary = new Joystick(Constants.secondaryJoystick);
-    Constants.encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
-  
-    Constants.encoder.setDistancePerPulse(4./256.);
-    Constants.encoder.setMaxPeriod(.1);
-    Constants.encoder.setMinRate(10);
+    frontLeft = new VictorSPX(Constants.frontLeftMotor);
+    Constants.frontLeft = frontLeft;
+    backLeft = new VictorSPX(Constants.backLeftMotor);
+    Constants.backLeft = backLeft;
+    frontRight = new VictorSPX(Constants.frontRightMotor);
+    Constants.frontRight = frontRight;
+    backRight = new VictorSPX(Constants.backRightMotor);
+    Constants.backRight = backRight;
+    elevator = new VictorSP(Constants.elevatorMotor);
+    Constants.elevator = elevator;
+
+    primaryJoystick = new Joystick(Constants.primaryJoystick);
+    Constants.joystickPrimary = primaryJoystick;
+    secondaryJoystick = new Joystick(Constants.secondaryJoystick);
+    Constants.joystickSecondary = secondaryJoystick;
+    xBoxController = new XboxController(Constants.xBoxControllerPort);
+    Constants.xBoxController = xBoxController;
+
+    encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
+    Constants.encoder = encoder;
   }
 
   /**
