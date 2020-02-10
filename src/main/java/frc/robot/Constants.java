@@ -8,9 +8,11 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -23,34 +25,47 @@ import edu.wpi.first.wpilibj.SpeedController;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final int frontLeftMotor = 0;
-  public static final int frontRightMotor = 1;
+  //Motor CAN address mappings
+  public static final int frontLeftMotor = 1;
+  public static final int frontRightMotor = 3;
   public static final int backLeftMotor = 2;
-  public static final int backRightMotor = 3;
+  public static final int backRightMotor = 4;
+  public static final int elevatorMotor = 0;
+  public static final int intakeMotorPort = 1;
   
   //Joystick port mappings
   public static final int primaryJoystick = 0;
   public static final int secondaryJoystick = 1;
+  public static final int xBoxControllerPort = 2;
 
   //Other port mappings
   public static final int encoderChannelA = 7;
   public static final int encoderChannelB = 8;
 
   //Motor instances and drive train
-  public static SpeedController frontLeft;
-  public static SpeedController frontRight;
-  public static SpeedController backLeft;
-  public static SpeedController backRight;
+  public static VictorSPX frontLeft;
+  public static VictorSPX frontRight;
+  public static VictorSPX backLeft;
+  public static VictorSPX backRight;
+  public static Talon elevator;
+  public static VictorSP intakeMotor;
   public static Encoder encoder;
 
-  public static VictorSPX test;
+  //Joystick objects
+  public static Joystick joystickPrimary;
+  public static Joystick joystickSecondary;
+  public static XboxController xBoxController;
 
   //Joystick button mappings
   public static final int reverseButton = 1;
   public static final int arcadeToTank = 2;
   public static final int tankToArcade = 2;
+  public static final int intakeForward = 0;
+  public static final int intakeBackward = 0;
 
   //Status/mode information
   public static int driveMode = 0;
   public static int reverse = 0;
+  public static double intakePower = 1;
+  public static boolean intakeStatus = false;
 }

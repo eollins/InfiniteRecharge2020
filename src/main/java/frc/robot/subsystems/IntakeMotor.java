@@ -8,13 +8,26 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-public class DriveTrain extends SubsystemBase {
+public class IntakeMotor extends SubsystemBase {
   /**
-   * Creates a new DriveTrain.
+   * Creates a new IntakeMotor.
    */
-  public DriveTrain() {
+  public IntakeMotor() {
 
+  }
+
+  public static void SetMotor(boolean direction) {
+    int multiplier = 1;
+    if (direction == false) {
+      multiplier = -1;
+    }
+    Constants.intakeMotor.set(Constants.intakePower * multiplier);
+  }
+
+  public static void StopMotor() {
+    Constants.intakeMotor.set(0);
   }
 
   @Override
