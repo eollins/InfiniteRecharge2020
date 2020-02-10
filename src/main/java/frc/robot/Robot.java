@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Reverse;
 import frc.robot.commands.SwitchDriveMode;
 import frc.robot.commands.ToggleIntake;
 
@@ -76,10 +77,14 @@ public class Robot extends TimedRobot {
     //Instantiate buttons
     JoystickButton intakeToggleForward = new JoystickButton(xBoxController, Constants.intakeForward);
     JoystickButton intakeToggleBackward = new JoystickButton(xBoxController, Constants.intakeBackward);
-    JoystickButton switchDriveMode = new JoystickButton(primaryJoystick, 1);
+    JoystickButton switchDriveMode = new JoystickButton(primaryJoystick, Constants.tankToArcade);
+    JoystickButton reverseButton = new JoystickButton(primaryJoystick, Constants.reverseButton);
+    JoystickButton reverseButton2 = new JoystickButton(secondaryJoystick, Constants.reverseButton);
     intakeToggleForward.whenPressed(new ToggleIntake(true));
     intakeToggleBackward.whenPressed(new ToggleIntake(false));
     switchDriveMode.whenPressed(new SwitchDriveMode());
+    reverseButton.whenPressed(new Reverse());
+    reverseButton2.whenPressed(new Reverse());
 
     encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
     Constants.encoder = encoder;
@@ -167,6 +172,17 @@ public class Robot extends TimedRobot {
 
     if (Constants.driveMode == 0) {
       //Arcade drive
+      if (primaryY < Constants.deadZone) {
+        primaryY = 0;
+      }
+      if (primaryX < Constants.deadZone) {
+        primaryX = 0;
+      }
+
+      if (Constants.joystickPrimary.getRawButton(Constants.lockButton)) {
+        primaryZ = 0;
+      }
+
       backLeft.set(ControlMode.PercentOutput, primaryY);
       backRight.set(ControlMode.PercentOutput, primaryY * -1);
 
@@ -181,6 +197,28 @@ public class Robot extends TimedRobot {
     }
     else {
       //Tank drive
+      if (primaryX < Constants.deadZone) {
+        primaryX = 0;
+      }
+      if (primaryY < Constants.deadZone) {
+        primaryY = 0;
+      }
+
+      double sliderPos = Constants.joystickPrimary.getThrottle();
+
+      boolean locked = Constants.joystickPrimary.getRawButton(Constants.lockButton) || Constants.joystickPrimary.getRawButton(Constants.lockButton);
+
+      while (locked) {
+        frontLeft.set(ControlMode.PercentOutput, sliderPos);
+        frontRight.set(ControlMode.PercentOutput, sliderPos);
+        backLeft.set(ControlMode.PercentOutput, sliderPos);
+        backRight.set(ControlMode.PercentOutput, sliderPos);
+
+        if (!Constants.joystickPrimary.getRawButton(Constants.lockButton) && !Constants.joystickPrimary.getRawButton(Constants.lockButton)) {
+          locked = false;
+        }
+      }
+      
       primaryY *= -1;
       frontLeft.set(ControlMode.PercentOutput, primaryY);
       frontRight.set(ControlMode.PercentOutput, secondaryY);

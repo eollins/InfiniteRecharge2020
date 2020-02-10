@@ -57,15 +57,17 @@ public final class Constants {
   public static XboxController xBoxController;
 
   //Joystick button mappings
-  public static final int reverseButton = 1;
+  public static final int reverseButton = 3;
   public static final int arcadeToTank = 2;
   public static final int tankToArcade = 2;
   public static final int intakeForward = 0;
   public static final int intakeBackward = 0;
+  public static final int lockButton = 1;
 
   //Status/mode information
   public static int driveMode = 0;
   public static int reverse = 0;
   public static double intakePower = 1;
   public static boolean intakeStatus = false;
+  public static double deadZone = 0.5;
 }
