@@ -5,27 +5,28 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 
-public class ToggleIntake extends CommandBase {
-  public ToggleIntake(boolean direction) {
-    addRequirements(new IntakeMotor());
-
-    if (Constants.intakeStatus == false) {
-      IntakeMotor.SetMotor(direction);
-      Constants.intakeStatus = true;
-    }
-    else {
-      IntakeMotor.StopMotor();
-      Constants.intakeStatus = false;
-    }
+public class SwitchDriveMode extends CommandBase {
+  /**
+   * Creates a new SwitchDriveMode.
+   */
+  public SwitchDriveMode() {
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (Constants.driveMode == 0) {
+      Constants.driveMode = 1;
+    }
+    else {
+      Constants.driveMode = 0;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -10,6 +10,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -34,8 +35,8 @@ public final class Constants {
   
   //Joystick port mappings
   public static final int primaryJoystick = 0;
-  public static final int secondaryJoystick = 2;
-  public static final int xBoxControllerPort = 1;
+  public static final int secondaryJoystick = 1;
+  public static final int xBoxControllerPort = 2;
 
   //Other port mappings
   public static final int encoderChannelA = 7;
@@ -46,7 +47,7 @@ public final class Constants {
   public static VictorSPX frontRight;
   public static VictorSPX backLeft;
   public static VictorSPX backRight;
-  public static VictorSP elevator;
+  public static Talon elevator;
   public static VictorSP intakeMotor;
   public static Encoder encoder;
 

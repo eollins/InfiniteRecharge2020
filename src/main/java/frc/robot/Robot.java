@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
@@ -20,13 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-//test
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
+import frc.robot.commands.SwitchDriveMode;
+import frc.robot.commands.ToggleIntake;
+
 public class Robot extends TimedRobot {
   private Subsystem driveTrain;
   private RobotContainer m_robotContainer;
@@ -35,7 +32,7 @@ public class Robot extends TimedRobot {
   private VictorSPX backLeft;
   private VictorSPX frontRight;
   private VictorSPX backRight;
-  private VictorSP elevator;
+  private Talon elevator;
   private VictorSP intakeMotor;
 
   private Joystick primaryJoystick;
@@ -54,6 +51,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    //Instantiate all motors
     frontLeft = new VictorSPX(Constants.frontLeftMotor);
     Constants.frontLeft = frontLeft;
     backLeft = new VictorSPX(Constants.backLeftMotor);
@@ -62,11 +60,12 @@ public class Robot extends TimedRobot {
     Constants.frontRight = frontRight;
     backRight = new VictorSPX(Constants.backRightMotor);
     Constants.backRight = backRight;
-    elevator = new VictorSP(Constants.elevatorMotor);
+    elevator = new Talon(Constants.elevatorMotor);
     Constants.elevator = elevator;
     intakeMotor = new VictorSP(Constants.intakeMotorPort);
     Constants.intakeMotor = intakeMotor;
 
+    //Instantiate joysticks/controllers
     primaryJoystick = new Joystick(Constants.primaryJoystick);
     Constants.joystickPrimary = primaryJoystick;
     secondaryJoystick = new Joystick(Constants.secondaryJoystick);
@@ -74,10 +73,13 @@ public class Robot extends TimedRobot {
     xBoxController = new XboxController(Constants.xBoxControllerPort);
     Constants.xBoxController = xBoxController;
 
+    //Instantiate buttons
     JoystickButton intakeToggleForward = new JoystickButton(xBoxController, Constants.intakeForward);
     JoystickButton intakeToggleBackward = new JoystickButton(xBoxController, Constants.intakeBackward);
+    JoystickButton switchDriveMode = new JoystickButton(primaryJoystick, 1);
     intakeToggleForward.whenPressed(new ToggleIntake(true));
     intakeToggleBackward.whenPressed(new ToggleIntake(false));
+    switchDriveMode.whenPressed(new SwitchDriveMode());
 
     encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
     Constants.encoder = encoder;
@@ -146,26 +148,39 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    //Get instances of motors
     VictorSPX frontLeft = Constants.frontLeft;
     VictorSPX frontRight = Constants.frontRight;
     VictorSPX backLeft = Constants.backLeft;
     VictorSPX backRight = Constants.backRight;
-    VictorSP elevator = Constants.elevator;
+    Talon elevator = Constants.elevator;
 
+    //Get joystick positions
     double primaryX = Constants.joystickPrimary.getRawAxis(0);
     double primaryY = Constants.joystickPrimary.getRawAxis(1);
+    double primaryZ = Constants.joystickPrimary.getTwist();
     double secondaryY = Constants.joystickSecondary.getRawAxis(1);
     
+    //Get XBox Controller status
     double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
     double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
     if (Constants.driveMode == 0) {
-      frontLeft.set(ControlMode.PercentOutput, primaryY - primaryX);
-      frontRight.set(ControlMode.PercentOutput, primaryY - primaryX);
-      backLeft.set(ControlMode.PercentOutput, primaryY - primaryX);
-      backRight.set(ControlMode.PercentOutput, primaryY - primaryX);
+      //Arcade drive
+      backLeft.set(ControlMode.PercentOutput, primaryY);
+      backRight.set(ControlMode.PercentOutput, primaryY * -1);
+
+      if (primaryZ <= 0.3) {
+        frontRight.set(ControlMode.PercentOutput, primaryZ);
+        frontLeft.set(ControlMode.PercentOutput, 0);
+      }
+      else if (primaryZ >= 0.3) {
+        frontRight.set(ControlMode.PercentOutput, 0);
+        frontLeft.set(ControlMode.PercentOutput, primaryZ);
+      }
     }
     else {
+      //Tank drive
       primaryY *= -1;
       frontLeft.set(ControlMode.PercentOutput, primaryY);
       frontRight.set(ControlMode.PercentOutput, secondaryY);
@@ -173,6 +188,7 @@ public class Robot extends TimedRobot {
       backRight.set(ControlMode.PercentOutput, secondaryY);
     }
     
+    //Change elevator direction
     if (xBoxPosition > leftPosition) {
       elevator.set(xBoxPosition);
     }
@@ -195,5 +211,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  
   }
 }
