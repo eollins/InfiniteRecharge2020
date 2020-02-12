@@ -14,6 +14,7 @@ public class Reverse extends CommandBase {
   /**
    * Creates a new Reverse.
    */
+  boolean finished = false;
   public Reverse() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -23,11 +24,19 @@ public class Reverse extends CommandBase {
   public void initialize() {
     if (Constants.reverse == 0) {
       Constants.reverse = 1;
+      Constants.frontLeft.setInverted(true);
+      Constants.frontRight.setInverted(true);
+      Constants.backLeft.setInverted(true);
+      Constants.backRight.setInverted(true);
     }
     else {
       Constants.reverse = 0;
+      Constants.frontLeft.setInverted(false);
+      Constants.frontRight.setInverted(false);
+      Constants.backLeft.setInverted(false);
+      Constants.backRight.setInverted(false);
     }
-    end(false);
+    finished = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,6 +52,6 @@ public class Reverse extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

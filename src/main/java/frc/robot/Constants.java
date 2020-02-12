@@ -69,5 +69,5 @@ public final class Constants {
   public static int reverse = 0;
   public static double intakePower = 1;
   public static boolean intakeStatus = false;
-  public static double deadZone = 0;
+  public static double deadZone = 0.1;
 }

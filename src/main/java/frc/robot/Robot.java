@@ -172,40 +172,35 @@ public class Robot extends TimedRobot {
 
     if (Constants.driveMode == 0) {
       //Arcade drive
-      if (primaryY > (Constants.deadZone * -1) && primaryY < Constants.deadZone) {
-        primaryY = 0;
+      double joyX = primaryJoystick.getRawAxis(0);
+      double joyY = primaryJoystick.getRawAxis(1);
+      double leftMotors = joyY + joyX;
+      double rightMotors = joyY - joyX;
+
+      if (joyX > (Constants.deadZone * -1) && joyX < Constants.deadZone) {
+        joyX = 0;
       }
-      if (primaryX > (Constants.deadZone * -1) && primaryX < Constants.deadZone) {
-        primaryX = 0;
+      if (joyY > (Constants.deadZone * -1) && joyY < Constants.deadZone) {
+        joyY = 0;
       }
 
-      if (secondaryY > (Constants.deadZone * -1) && secondaryY < Constants.deadZone) {
-        secondaryY = 0;
-      }
-      // if (secondaryX > (Constants.deadZone * -1) && secondaryX < Constants.deadZone) {
-      //   secondaryX = 0;
-      // }
+      frontLeft.set(ControlMode.PercentOutput, leftMotors);
+      frontRight.set(ControlMode.PercentOutput, rightMotors);
 
-      if (Constants.joystickPrimary.getRawButton(Constants.lockButton)) {
-        primaryZ = 0;
-      }
-
-      backLeft.set(ControlMode.PercentOutput, primaryY);
-      backRight.set(ControlMode.PercentOutput, primaryY * -1);
-
-      if (primaryZ <= 0.3) {
-        frontRight.set(ControlMode.PercentOutput, primaryZ);
-        frontLeft.set(ControlMode.PercentOutput, 0);
-      }
-      else if (primaryZ >= 0.3) {
-        frontRight.set(ControlMode.PercentOutput, 0);
-        frontLeft.set(ControlMode.PercentOutput, primaryZ);
-      }
-    }
+      backLeft.set(ControlMode.PercentOutput, leftMotors);
+      frontRight.set(ControlMode.PercentOutput, rightMotors);
+    } 
     else {
       //Tank drive
-      primaryY = Math.pow(2, (primaryY - 1)) - 0.05;
-      secondaryY = Math.pow(2, (secondaryY - 1)) - 0.05;
+      //primaryY = Math.pow(2, (primaryY - 1)) - 0.05;
+      //secondaryY = Math.pow(2, (secondaryY - 1)) - 0.05;
+
+      if (primaryY < Constants.deadZone && primaryY > (Constants.deadZone * -1)) {
+        primaryY = 0;
+      }
+      if (secondaryY < Constants.deadZone && secondaryY > (Constants.deadZone * -1)) {
+        secondaryY = 0;
+      }
 
       primaryY *= -1;
       frontLeft.set(ControlMode.PercentOutput, primaryY);
