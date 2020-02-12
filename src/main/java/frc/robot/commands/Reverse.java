@@ -27,7 +27,7 @@ public class Reverse extends CommandBase {
     else {
       Constants.reverse = 0;
     }
-    end();
+    end(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

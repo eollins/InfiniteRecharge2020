@@ -172,12 +172,19 @@ public class Robot extends TimedRobot {
 
     if (Constants.driveMode == 0) {
       //Arcade drive
-      if (primaryY < Constants.deadZone) {
+      if (primaryY > (Constants.deadZone * -1) && primaryY < Constants.deadZone) {
         primaryY = 0;
       }
-      if (primaryX < Constants.deadZone) {
+      if (primaryX > (Constants.deadZone * -1) && primaryX < Constants.deadZone) {
         primaryX = 0;
       }
+
+      if (secondaryY > (Constants.deadZone * -1) && secondaryY < Constants.deadZone) {
+        secondaryY = 0;
+      }
+      // if (secondaryX > (Constants.deadZone * -1) && secondaryX < Constants.deadZone) {
+      //   secondaryX = 0;
+      // }
 
       if (Constants.joystickPrimary.getRawButton(Constants.lockButton)) {
         primaryZ = 0;
@@ -197,28 +204,9 @@ public class Robot extends TimedRobot {
     }
     else {
       //Tank drive
-      if (primaryX < Constants.deadZone) {
-        primaryX = 0;
-      }
-      if (primaryY < Constants.deadZone) {
-        primaryY = 0;
-      }
+      primaryY = Math.pow(2, (primaryY - 1)) - 0.05;
+      secondaryY = Math.pow(2, (secondaryY - 1)) - 0.05;
 
-      double sliderPos = Constants.joystickPrimary.getThrottle();
-
-      boolean locked = Constants.joystickPrimary.getRawButton(Constants.lockButton) || Constants.joystickPrimary.getRawButton(Constants.lockButton);
-
-      while (locked) {
-        frontLeft.set(ControlMode.PercentOutput, sliderPos);
-        frontRight.set(ControlMode.PercentOutput, sliderPos);
-        backLeft.set(ControlMode.PercentOutput, sliderPos);
-        backRight.set(ControlMode.PercentOutput, sliderPos);
-
-        if (!Constants.joystickPrimary.getRawButton(Constants.lockButton) && !Constants.joystickPrimary.getRawButton(Constants.lockButton)) {
-          locked = false;
-        }
-      }
-      
       primaryY *= -1;
       frontLeft.set(ControlMode.PercentOutput, primaryY);
       frontRight.set(ControlMode.PercentOutput, secondaryY);

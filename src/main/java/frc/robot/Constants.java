@@ -26,12 +26,12 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public final class Constants {
   //Motor CAN address mappings
-  public static final int frontLeftMotor = 1;
-  public static final int frontRightMotor = 3;
-  public static final int backLeftMotor = 2;
-  public static final int backRightMotor = 4;
-  public static final int elevatorMotor = 0;
-  public static final int intakeMotorPort = 1;
+  public static final int frontLeftMotor = 1; //CAN
+  public static final int frontRightMotor = 3; //CAN
+  public static final int backLeftMotor = 2; //CAN
+  public static final int backRightMotor = 4; //CAN
+  public static final int elevatorMotor = 0; //PWM
+  public static final int intakeMotorPort = 1; //PWM
   
   //Joystick port mappings
   public static final int primaryJoystick = 0;
@@ -60,14 +60,14 @@ public final class Constants {
   public static final int reverseButton = 3;
   public static final int arcadeToTank = 2;
   public static final int tankToArcade = 2;
-  public static final int intakeForward = 0;
-  public static final int intakeBackward = 0;
+  public static final int intakeForward = 6;
+  public static final int intakeBackward = 5;
   public static final int lockButton = 1;
 
   //Status/mode information
-  public static int driveMode = 0;
+  public static int driveMode = 1;
   public static int reverse = 0;
   public static double intakePower = 1;
   public static boolean intakeStatus = false;
-  public static double deadZone = 0.5;
+  public static double deadZone = 0;
 }
