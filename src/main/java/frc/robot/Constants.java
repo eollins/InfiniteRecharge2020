@@ -63,6 +63,9 @@ public final class Constants {
   public static final int intakeForward = 6;
   public static final int intakeBackward = 5;
   public static final int lockButton = 1;
+  public static final int toggleTwisty = 7;
+  public static final int increaseSpeed = 6;
+  public static final int decreaseSpeed = 4;
 
   //Status/mode information
   public static int driveMode = 0;
@@ -70,4 +73,6 @@ public final class Constants {
   public static double intakePower = 1;
   public static boolean intakeStatus = false;
   public static double deadZone = 0.1;
+  public static boolean twisty = false;
+  public static double motorMultiplier = 1;
 }

@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ChangeMotorMultiplier;
 import frc.robot.commands.Reverse;
 import frc.robot.commands.SwitchDriveMode;
 import frc.robot.commands.ToggleIntake;
+import frc.robot.commands.ToggleTwisty;
 
 public class Robot extends TimedRobot {
   private Subsystem driveTrain;
@@ -80,11 +82,18 @@ public class Robot extends TimedRobot {
     JoystickButton switchDriveMode = new JoystickButton(primaryJoystick, Constants.tankToArcade);
     JoystickButton reverseButton = new JoystickButton(primaryJoystick, Constants.reverseButton);
     JoystickButton reverseButton2 = new JoystickButton(secondaryJoystick, Constants.reverseButton);
+    JoystickButton toggleTwisty = new JoystickButton(primaryJoystick, Constants.toggleTwisty);
+    JoystickButton increaseSpeed = new JoystickButton(primaryJoystick, Constants.increaseSpeed);
+    JoystickButton decreaseSpeed = new JoystickButton(primaryJoystick, Constants.decreaseSpeed);
+
     intakeToggleForward.whenPressed(new ToggleIntake(true));
     intakeToggleBackward.whenPressed(new ToggleIntake(false));
     switchDriveMode.whenPressed(new SwitchDriveMode());
     reverseButton.whenPressed(new Reverse());
     reverseButton2.whenPressed(new Reverse());
+    toggleTwisty.whenPressed(new ToggleTwisty());
+    increaseSpeed.whenPressed(new ChangeMotorMultiplier(Constants.motorMultiplier, true));
+    decreaseSpeed.whenPressed(new ChangeMotorMultiplier(Constants.motorMultiplier, false));
 
     encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
     Constants.encoder = encoder;
@@ -181,6 +190,8 @@ public class Robot extends TimedRobot {
       //Arcade drive
       double joyX = primaryJoystick.getRawAxis(0) * -1;
       double joyY = primaryJoystick.getRawAxis(1);
+      double twist = primaryJoystick.getRawAxis(2);
+      double slider = (primaryJoystick.getRawAxis(3) * 2) - 1;
 
       if (joyX > (Constants.deadZone * -1) && joyX < Constants.deadZone) {
         joyX = 0;
@@ -190,13 +201,25 @@ public class Robot extends TimedRobot {
       }
 
       if (primaryJoystick.getRawButton(5)) {
-        joyX = 0;
+        joyX = slider;
       }
 
-      double leftMotors = joyY + joyX;
-      double rightMotors = joyY - joyX;
+      double leftMotors;
+      double rightMotors;
+
+      if (!Constants.twisty) {
+        leftMotors = joyY + joyX;
+        rightMotors = joyY - joyX;
+      }
+      else {
+        leftMotors = joyY + twist;
+        rightMotors = joyY - twist;
+      }
 
       rightMotors *= -1;
+
+      leftMotors *= Constants.motorMultiplier;
+      rightMotors *= Constants.motorMultiplier;
 
       frontLeft.set(ControlMode.PercentOutput, leftMotors);
       frontRight.set(ControlMode.PercentOutput, rightMotors);
@@ -215,6 +238,9 @@ public class Robot extends TimedRobot {
       if (secondaryY < Constants.deadZone && secondaryY > (Constants.deadZone * -1)) {
         secondaryY = 0;
       }
+
+      primaryY *= Constants.motorMultiplier;
+      secondaryY *= Constants.motorMultiplier;
 
       primaryY *= -1;
       frontLeft.set(ControlMode.PercentOutput, primaryY);
