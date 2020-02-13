@@ -170,12 +170,17 @@ public class Robot extends TimedRobot {
     double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
     double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
+    if (xBoxController.getRawButton(5)) {
+      Constants.intakeMotor.set(0.8);
+    }
+    else if (xBoxController.getRawButton(6)) {
+      Constants.intakeMotor.set(0);
+    }
+
     if (Constants.driveMode == 0) {
       //Arcade drive
-      double joyX = primaryJoystick.getRawAxis(0);
+      double joyX = primaryJoystick.getRawAxis(0) * -1;
       double joyY = primaryJoystick.getRawAxis(1);
-      double leftMotors = joyY + joyX;
-      double rightMotors = joyY - joyX;
 
       if (joyX > (Constants.deadZone * -1) && joyX < Constants.deadZone) {
         joyX = 0;
@@ -183,6 +188,15 @@ public class Robot extends TimedRobot {
       if (joyY > (Constants.deadZone * -1) && joyY < Constants.deadZone) {
         joyY = 0;
       }
+
+      if (primaryJoystick.getRawButton(5)) {
+        joyX = 0;
+      }
+
+      double leftMotors = joyY + joyX;
+      double rightMotors = joyY - joyX;
+
+      rightMotors *= -1;
 
       frontLeft.set(ControlMode.PercentOutput, leftMotors);
       frontRight.set(ControlMode.PercentOutput, rightMotors);

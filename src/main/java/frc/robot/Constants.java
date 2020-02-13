@@ -65,7 +65,7 @@ public final class Constants {
   public static final int lockButton = 1;
 
   //Status/mode information
-  public static int driveMode = 1;
+  public static int driveMode = 0;
   public static int reverse = 0;
   public static double intakePower = 1;
   public static boolean intakeStatus = false;

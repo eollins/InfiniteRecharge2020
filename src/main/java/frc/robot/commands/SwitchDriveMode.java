@@ -14,6 +14,7 @@ public class SwitchDriveMode extends CommandBase {
   /**
    * Creates a new SwitchDriveMode.
    */
+  boolean finished = false;
   public SwitchDriveMode() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -27,6 +28,7 @@ public class SwitchDriveMode extends CommandBase {
     else {
       Constants.driveMode = 0;
     }
+    finished = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,6 +44,6 @@ public class SwitchDriveMode extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }
