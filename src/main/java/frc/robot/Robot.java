@@ -138,6 +138,11 @@ public class Robot extends TimedRobot {
       RampUpMotor rampDown = new RampUpMotor(false);
       rampDown.initialize();
     }
+
+    SmartDashboard.putNumber("Left POV", leftPOV);
+    SmartDashboard.putNumber("Motor multiplier", Constants.increaseIntakeBy);
+    SmartDashboard.putNumber("Maximum motor power", Constants.intakePower);
+    SmartDashboard.putNumber("Current speed", intakeMotor.getSpeed());
   }
 
   /**
