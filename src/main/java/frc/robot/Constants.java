@@ -75,4 +75,6 @@ public final class Constants {
   public static double deadZone = 0.1;
   public static boolean twisty = false;
   public static double motorMultiplier = 1;
+  public static double maximumIntakePower = 0.8;
+  public static double increaseIntakeBy = 0.25;
 }

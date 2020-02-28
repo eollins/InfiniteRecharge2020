@@ -31,14 +31,17 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ChangeMotorMultiplier;
+import frc.robot.commands.RampUpMotor;
 import frc.robot.commands.Reverse;
 import frc.robot.commands.SwitchDriveMode;
 import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.ToggleTwisty;
+import frc.robot.subsystems.IntakeMotor;
 
 public class Robot extends TimedRobot {
   private Subsystem driveTrain;
   private RobotContainer m_robotContainer;
+  public Subsystem IntakeMotor;
 
   private VictorSPX frontLeft;
   private VictorSPX backLeft;
@@ -63,6 +66,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    IntakeMotor = new IntakeMotor();
 
     // Instantiate all motors
     frontLeft = new VictorSPX(Constants.frontLeftMotor);
@@ -87,8 +91,6 @@ public class Robot extends TimedRobot {
     Constants.xBoxController = xBoxController;
 
     // Instantiate buttons
-    JoystickButton intakeToggleForward = new JoystickButton(xBoxController, Constants.intakeForward);
-    JoystickButton intakeToggleBackward = new JoystickButton(xBoxController, Constants.intakeBackward);
     JoystickButton switchDriveMode = new JoystickButton(primaryJoystick, Constants.tankToArcade);
     JoystickButton reverseButton = new JoystickButton(primaryJoystick, Constants.reverseButton);
     JoystickButton reverseButton2 = new JoystickButton(secondaryJoystick, Constants.reverseButton);
@@ -96,8 +98,6 @@ public class Robot extends TimedRobot {
     JoystickButton increaseSpeed = new JoystickButton(primaryJoystick, Constants.increaseSpeed);
     JoystickButton decreaseSpeed = new JoystickButton(primaryJoystick, Constants.decreaseSpeed);
 
-    intakeToggleForward.whenPressed(new ToggleIntake(true));
-    intakeToggleBackward.whenPressed(new ToggleIntake(false));
     switchDriveMode.whenPressed(new SwitchDriveMode());
     reverseButton.whenPressed(new Reverse());
     reverseButton2.whenPressed(new Reverse());
@@ -128,6 +128,16 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    double leftPOV = xBoxController.getPOV(0);
+    if (leftPOV == 0) {
+      RampUpMotor rampUp = new RampUpMotor(true);
+      rampUp.initialize();
+    }
+    if (leftPOV == 180) {
+      RampUpMotor rampDown = new RampUpMotor(false);
+      rampDown.initialize();
+    }
   }
 
   /**
