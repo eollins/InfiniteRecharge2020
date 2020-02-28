@@ -34,9 +34,8 @@ import frc.robot.commands.ChangeMotorMultiplier;
 import frc.robot.commands.RampUpMotor;
 import frc.robot.commands.Reverse;
 import frc.robot.commands.SwitchDriveMode;
-import frc.robot.commands.ToggleIntake;
 import frc.robot.commands.ToggleTwisty;
-import frc.robot.subsystems.IntakeMotor;
+import frc.robot.subsystems.ShooterMotor;
 
 public class Robot extends TimedRobot {
   private Subsystem driveTrain;
@@ -66,7 +65,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    IntakeMotor = new IntakeMotor();
+    IntakeMotor = new ShooterMotor();
 
     // Instantiate all motors
     frontLeft = new VictorSPX(Constants.frontLeftMotor);

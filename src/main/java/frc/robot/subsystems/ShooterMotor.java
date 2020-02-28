@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class IntakeMotor extends SubsystemBase {
+public class ShooterMotor extends SubsystemBase {
   /**
    * Creates a new IntakeMotor.
    */
-  public IntakeMotor() {
+  public ShooterMotor() {
 
   }
 
