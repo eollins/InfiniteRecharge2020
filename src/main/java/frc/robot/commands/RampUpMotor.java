@@ -8,26 +8,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.subsystems.ShooterMotor;
 
-public class SwitchDriveMode extends CommandBase {
+public class RampUpMotor extends CommandBase {
   /**
-   * Creates a new SwitchDriveMode.
+   * Creates a new RampUpMotor.
    */
+  boolean directionToRamp;
   boolean finished = false;
-  public SwitchDriveMode() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public RampUpMotor(boolean direction) {
+    addRequirements(new ShooterMotor());
+    directionToRamp = direction;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (Constants.driveMode == 0) {
-      Constants.driveMode = 1;
-    }
-    else {
-      Constants.driveMode = 0;
-    }
+    ShooterMotor.RampMotor(directionToRamp);
     finished = true;
   }
 

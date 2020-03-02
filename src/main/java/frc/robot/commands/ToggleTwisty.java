@@ -10,23 +10,23 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 
-public class SwitchDriveMode extends CommandBase {
+public class ToggleTwisty extends CommandBase {
   /**
-   * Creates a new SwitchDriveMode.
+   * Creates a new ToggleTwisty.
    */
   boolean finished = false;
-  public SwitchDriveMode() {
+  public ToggleTwisty() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (Constants.driveMode == 0) {
-      Constants.driveMode = 1;
+    if (Constants.twisty == false) {
+      Constants.twisty = true;
     }
     else {
-      Constants.driveMode = 0;
+      Constants.twisty = false;
     }
     finished = true;
   }
