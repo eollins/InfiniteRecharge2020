@@ -8,7 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeMotor;
+import frc.robot.subsystems.ShooterMotor;
 
 public class RampUpMotor extends CommandBase {
   /**
@@ -17,14 +17,14 @@ public class RampUpMotor extends CommandBase {
   boolean directionToRamp;
   boolean finished = false;
   public RampUpMotor(boolean direction) {
-    addRequirements(new IntakeMotor());
+    addRequirements(new ShooterMotor());
     directionToRamp = direction;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    IntakeMotor.RampMotor(directionToRamp);
+    ShooterMotor.RampMotor(directionToRamp);
     finished = true;
   }
 

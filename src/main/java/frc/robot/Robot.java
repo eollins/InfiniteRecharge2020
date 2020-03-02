@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -48,10 +50,15 @@ public class Robot extends TimedRobot {
   private VictorSPX backRight;
   private Talon elevator;
   private VictorSP intakeMotor;
+  private TalonSRX shooterMotor;
 
   private Joystick primaryJoystick;
   private Joystick secondaryJoystick;
   private XboxController xBoxController;
+
+  private VictorSP conveyorMotor;
+  private Talon innerIntake1;
+  private Talon innerIntake2;
 
   private Encoder encoder;
 
@@ -80,6 +87,17 @@ public class Robot extends TimedRobot {
     Constants.elevator = elevator;
     intakeMotor = new VictorSP(Constants.intakeMotorPort);
     Constants.intakeMotor = intakeMotor;
+    shooterMotor = new TalonSRX(Constants.shooterMotorPort);
+    Constants.shooterMotor = shooterMotor;
+    innerIntake1 = new Talon(Constants.innerIntake1Port);
+    Constants.innerIntake1 = innerIntake1;
+    innerIntake2 = new Talon(Constants.innerIntake2Port);
+    Constants.innerIntake2 = innerIntake2;
+    conveyorMotor = new VictorSP(Constants.conveyorMotorPort);
+    Constants.conveyorMotor = conveyorMotor;
+
+    innerIntake1.setInverted(true);
+    conveyorMotor.setInverted(true);
 
     // Instantiate joysticks/controllers
     primaryJoystick = new Joystick(Constants.primaryJoystick);
@@ -213,10 +231,16 @@ public class Robot extends TimedRobot {
     double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
     if (xBoxController.getRawButton(5)) {
-      Constants.intakeMotor.set(0.8);
+      Constants.intakeMotor.set(0.6);
+      Constants.innerIntake1.set(0.5);
+      Constants.innerIntake2.set(0.5);
+      Constants.conveyorMotor.set(0.8);
     }
     else if (xBoxController.getRawButton(6)) {
       Constants.intakeMotor.set(0);
+      Constants.innerIntake1.set(0);
+      Constants.innerIntake2.set(0);
+      Constants.conveyorMotor.set(0);
     }
 
     if (Constants.driveMode == 0) {

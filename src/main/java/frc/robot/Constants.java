@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -32,6 +33,10 @@ public final class Constants {
   public static final int backRightMotor = 4; //CAN
   public static final int elevatorMotor = 0; //PWM
   public static final int intakeMotorPort = 1; //PWM
+  public static final int shooterMotorPort = 0; //CAN
+  public static final int innerIntake1Port = 3; //PWM
+  public static final int innerIntake2Port = 4; //PWM
+  public static final int conveyorMotorPort = 2; //PWM
   
   //Joystick port mappings
   public static final int primaryJoystick = 0;
@@ -50,6 +55,10 @@ public final class Constants {
   public static Talon elevator;
   public static VictorSP intakeMotor;
   public static Encoder encoder;
+  public static TalonSRX shooterMotor;
+  public static VictorSP conveyorMotor;
+  public static Talon innerIntake1;
+  public static Talon innerIntake2;
 
   //Joystick objects
   public static Joystick joystickPrimary;
@@ -76,5 +85,5 @@ public final class Constants {
   public static boolean twisty = false;
   public static double motorMultiplier = 1;
   public static double maximumIntakePower = 0.8;
-  public static double increaseIntakeBy = 0.25;
+  public static double increaseIntakeBy = 0.0005;
 }

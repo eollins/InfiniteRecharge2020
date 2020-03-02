@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 
@@ -17,7 +18,14 @@ public class ChangeMotorMultiplier extends CommandBase {
    * Creates a new ChangeMotorMultiplier.
    */
   boolean finished = false;
+  boolean increase = false;
   public ChangeMotorMultiplier(double currentSpeed, boolean increase) {
+    this.increase = increase;
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
     if (increase && Constants.motorMultiplier < 1) {
       Constants.motorMultiplier += 0.1;
     }
@@ -29,11 +37,7 @@ public class ChangeMotorMultiplier extends CommandBase {
       test.setRumble(RumbleType.kLeftRumble, 5);
     }
     finished = true;
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
+    SmartDashboard.putNumber("Multiplier", Constants.motorMultiplier);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

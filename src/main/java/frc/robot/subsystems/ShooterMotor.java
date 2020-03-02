@@ -7,6 +7,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -27,31 +30,31 @@ public class ShooterMotor extends SubsystemBase {
   }
 
   public static void RampMotor(boolean direction) {
-    VictorSP intakeMotor = Constants.intakeMotor;
-    double maximumIntakePower = Constants.maximumIntakePower;
-    double increaseBy = Constants.increaseIntakeBy;
+    // TalonSRX intakeMotor = Constants.shooterMotor;
+    // double maximumIntakePower = Constants.maximumIntakePower;
+    // double increaseBy = Constants.increaseIntakeBy;
 
-    double speed = intakeMotor.getSpeed();
+    // double speed = intakeMotor.getMotorOutputPercent();
 
-    if (direction) {
-      if (speed > maximumIntakePower) {
-        intakeMotor.set(maximumIntakePower);
-      }
-      else if (maximumIntakePower - speed < increaseBy) {
-        intakeMotor.set(maximumIntakePower);
-      }
-      else {
-        intakeMotor.set(speed + increaseBy);
-      }
-    }
-    else {
-      if (speed < increaseBy) {
-        intakeMotor.set(0);
-      }
-      else {
-        intakeMotor.set(speed - increaseBy);
-      }
-    }
+    // if (direction) {
+    //   if (speed > maximumIntakePower) {
+    //     intakeMotor.set(maximumIntakePower);
+    //   }
+    //   else if (maximumIntakePower - speed < increaseBy) {
+    //     intakeMotor.set(maximumIntakePower);
+    //   }
+    //   else {
+    //     intakeMotor.set(speed + increaseBy);
+    //   }
+    // }
+    // else {
+    //   if (speed < increaseBy) {
+    //     intakeMotor.set(0);
+    //   }
+    //   else {
+    //     intakeMotor.set(speed - increaseBy);
+    //   }
+    // }
   }
 
   public static void StopMotor() {
