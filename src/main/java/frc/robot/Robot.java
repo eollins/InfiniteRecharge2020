@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -32,6 +33,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ChangeIntakeSpeed;
 import frc.robot.commands.ChangeMotorMultiplier;
 import frc.robot.commands.RampUpMotor;
 import frc.robot.commands.Reverse;
@@ -61,6 +63,7 @@ public class Robot extends TimedRobot {
   private Talon innerIntake2;
 
   private Encoder encoder;
+  private AHRS ahrs;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -99,6 +102,8 @@ public class Robot extends TimedRobot {
     innerIntake1.setInverted(true);
     conveyorMotor.setInverted(true);
 
+    //ahrs = new AHRS()
+
     // Instantiate joysticks/controllers
     primaryJoystick = new Joystick(Constants.primaryJoystick);
     Constants.joystickPrimary = primaryJoystick;
@@ -115,6 +120,13 @@ public class Robot extends TimedRobot {
     JoystickButton increaseSpeed = new JoystickButton(primaryJoystick, Constants.increaseSpeed);
     JoystickButton decreaseSpeed = new JoystickButton(primaryJoystick, Constants.decreaseSpeed);
 
+    JoystickButton increaseConveyor = new JoystickButton(primaryJoystick, Constants.increaseConveyor);
+    JoystickButton decreaseConveyor = new JoystickButton(primaryJoystick, Constants.decreaseConveyor);
+    JoystickButton increaseIntake = new JoystickButton(primaryJoystick, Constants.increaseIntake);
+    JoystickButton decreaseIntake = new JoystickButton(primaryJoystick, Constants.decreaseIntake);
+    JoystickButton increaseInner = new JoystickButton(primaryJoystick, Constants.increaseInner);
+    JoystickButton decreaseInner = new JoystickButton(primaryJoystick, Constants.decreaseInner);
+
     switchDriveMode.whenPressed(new SwitchDriveMode());
     reverseButton.whenPressed(new Reverse());
     reverseButton2.whenPressed(new Reverse());
@@ -122,8 +134,16 @@ public class Robot extends TimedRobot {
     increaseSpeed.whenPressed(new ChangeMotorMultiplier(Constants.motorMultiplier, true));
     decreaseSpeed.whenPressed(new ChangeMotorMultiplier(Constants.motorMultiplier, false));
 
+    increaseConveyor.whenPressed(new ChangeIntakeSpeed(0, true));
+    decreaseConveyor.whenPressed(new ChangeIntakeSpeed(0, false));
+    increaseIntake.whenPressed(new ChangeIntakeSpeed(1, true));
+    decreaseIntake.whenPressed(new ChangeIntakeSpeed(1, false));
+    increaseInner.whenPressed(new ChangeIntakeSpeed(2, true));
+    decreaseInner.whenPressed(new ChangeIntakeSpeed(2, false));
+
     encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
     Constants.encoder = encoder;
+    encoder.setDistancePerPulse(4./256.);
   }
 
   /**
@@ -160,6 +180,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Motor multiplier", Constants.increaseIntakeBy);
     SmartDashboard.putNumber("Maximum motor power", Constants.intakePower);
     SmartDashboard.putNumber("Current speed", intakeMotor.getSpeed());
+
+    System.out.println(encoder.getDistance());
   }
 
   /**
@@ -231,10 +253,10 @@ public class Robot extends TimedRobot {
     double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
     if (xBoxController.getRawButton(5)) {
-      Constants.intakeMotor.set(0.6);
-      Constants.innerIntake1.set(0.5);
-      Constants.innerIntake2.set(0.5);
-      Constants.conveyorMotor.set(0.8);
+      Constants.intakeMotor.set(Constants.intakeSpeed);
+      Constants.innerIntake1.set(Constants.innerSpeed);
+      Constants.innerIntake2.set(Constants.innerSpeed);
+      Constants.conveyorMotor.set(Constants.conveyorSpeed);
     }
     else if (xBoxController.getRawButton(6)) {
       Constants.intakeMotor.set(0);

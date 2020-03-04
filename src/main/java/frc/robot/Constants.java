@@ -44,8 +44,10 @@ public final class Constants {
   public static final int xBoxControllerPort = 2;
 
   //Other port mappings
-  public static final int encoderChannelA = 7;
-  public static final int encoderChannelB = 8;
+  public static final int encoderChannelA = 0; //DIO
+  public static final int encoderChannelB = 1; //DIO
+  public static final int encoderChannelI = 2;
+  public static final int encoderChannelABS = 3;
 
   //Motor instances and drive train
   public static VictorSPX frontLeft;
@@ -75,6 +77,12 @@ public final class Constants {
   public static final int toggleTwisty = 7;
   public static final int increaseSpeed = 6;
   public static final int decreaseSpeed = 4;
+  public static final int increaseConveyor = 7;
+  public static final int decreaseConveyor = 8;
+  public static final int increaseIntake = 9;
+  public static final int decreaseIntake = 10;
+  public static final int increaseInner = 11;
+  public static final int decreaseInner = 12;
 
   //Status/mode information
   public static int driveMode = 0;
@@ -86,4 +94,13 @@ public final class Constants {
   public static double motorMultiplier = 1;
   public static double maximumIntakePower = 0.8;
   public static double increaseIntakeBy = 0.0005;
+
+  public static double kP = 0.03;
+  public static double kF = 0.00;
+  public static double kI = 0.00;
+  public static double kD = 0.00;
+
+  public static double conveyorSpeed = 0.8;
+  public static double intakeSpeed = 0.6;
+  public static double innerSpeed = 0.5;
 }
