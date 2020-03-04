@@ -68,21 +68,23 @@ public final class Constants {
   public static XboxController xBoxController;
 
   //Joystick button mappings
-  public static final int reverseButton = 3;
-  public static final int arcadeToTank = 2;
-  public static final int tankToArcade = 2;
-  public static final int intakeForward = 6;
-  public static final int intakeBackward = 5;
-  public static final int lockButton = 1;
-  public static final int toggleTwisty = 7;
-  public static final int increaseSpeed = 6;
-  public static final int decreaseSpeed = 4;
-  public static final int increaseConveyor = 7;
-  public static final int decreaseConveyor = 8;
-  public static final int increaseIntake = 9;
-  public static final int decreaseIntake = 10;
-  public static final int increaseInner = 11;
-  public static final int decreaseInner = 12;
+  public static final int reverseButton = 3; //joy
+  public static final int arcadeToTank = 2; //joy
+  public static final int tankToArcade = 2; //joy
+  public static final int intakeForward = 6; //xbox
+  public static final int intakeBackward = 5; //xbox
+  public static final int lockButton = 1; //joy
+  public static final int toggleTwisty = 7; //joy
+  public static final int increaseSpeed = 6; //joy
+  public static final int decreaseSpeed = 4; //joy
+  public static final int increaseConveyor = 7; //joy
+  public static final int decreaseConveyor = 8; //joy
+  public static final int increaseIntake = 9; //joy
+  public static final int decreaseIntake = 10; //joy
+  public static final int increaseInner = 11; //joy
+  public static final int decreaseInner = 12; //joy
+  public static final int rampUpShooter = 1; //xbox
+  public static final int rampDownShooter = 2; //xbox
 
   //Status/mode information
   public static int driveMode = 0;
