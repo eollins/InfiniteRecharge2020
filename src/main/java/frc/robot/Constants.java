@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -41,8 +42,8 @@ public final class Constants {
   public static final int innerIntake2Port = 4; //PWM
   public static final int conveyorMotorPort = 2; //PWM
   public static final int compressorPort = 6; //CAN
-  public static final int solenoid1 = 4;
-  public static final int solenoid2 = 5;
+  public static final int solenoid1 = 6;
+  public static final int solenoid2 = 7;
   
   
   //Joystick port mappings
@@ -104,7 +105,7 @@ public final class Constants {
   public static double deadZone = 0.1;
   public static boolean twisty = false;
   public static double motorMultiplier = 1;
-  public static double maximumIntakePower = 0.6;
+  public static double maximumIntakePower = 0.7;
   public static double increaseIntakeBy = 0.1;
 
   public static double kP = 0.03;
@@ -118,5 +119,5 @@ public final class Constants {
   public static double crawlSpeed = 0.2;
 
   public static Compressor compressor;
-  public static Solenoid solenoid;
+  public static DoubleSolenoid solenoid;
 }

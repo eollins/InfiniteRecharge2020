@@ -7,16 +7,15 @@
 
 package frc.robot;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.kauailabs.navx.frc.AHRS;
-
+import edu.wpi.cscore.CameraServerCvJNI;
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -28,9 +27,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -68,9 +65,11 @@ public class Robot extends TimedRobot {
   private Talon innerIntake2;
 
   private Encoder encoder;
-  private AHRS ahrs;
   private Compressor compressor;
-  private Solenoid solenoid;
+  private DoubleSolenoid solenoid;
+
+  private UsbCamera camera;
+  private MjpegServer server;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -106,6 +105,10 @@ public class Robot extends TimedRobot {
     conveyorMotor = new VictorSP(Constants.conveyorMotorPort);
     Constants.conveyorMotor = conveyorMotor;
 
+    camera = new UsbCamera("USB Camera", 0);
+    server = new MjpegServer("serve_USB Camera 0", 1181);
+    server.setSource(camera);
+
     innerIntake1.setInverted(true);
     conveyorMotor.setInverted(true);
 
@@ -120,24 +123,24 @@ public class Robot extends TimedRobot {
     Constants.xBoxController = xBoxController;
 
     // Instantiate buttons
-    JoystickButton switchDriveMode = new JoystickButton(primaryJoystick, Constants.tankToArcade);
-    JoystickButton reverseButton = new JoystickButton(primaryJoystick, Constants.reverseButton);
-    JoystickButton reverseButton2 = new JoystickButton(secondaryJoystick, Constants.reverseButton);
-    JoystickButton toggleTwisty = new JoystickButton(primaryJoystick, Constants.toggleTwisty);
-    JoystickButton increaseSpeed = new JoystickButton(primaryJoystick, Constants.increaseSpeed);
-    JoystickButton decreaseSpeed = new JoystickButton(primaryJoystick, Constants.decreaseSpeed);
-    JoystickButton rampUpShooter = new JoystickButton(xBoxController, Constants.rampUpShooter);
-    JoystickButton rampDownShooter = new JoystickButton(xBoxController, Constants.rampDownShooter);
+    final JoystickButton switchDriveMode = new JoystickButton(primaryJoystick, Constants.tankToArcade);
+    final JoystickButton reverseButton = new JoystickButton(primaryJoystick, Constants.reverseButton);
+    final JoystickButton reverseButton2 = new JoystickButton(secondaryJoystick, Constants.reverseButton);
+    final JoystickButton toggleTwisty = new JoystickButton(primaryJoystick, Constants.toggleTwisty);
+    final JoystickButton increaseSpeed = new JoystickButton(primaryJoystick, Constants.increaseSpeed);
+    final JoystickButton decreaseSpeed = new JoystickButton(primaryJoystick, Constants.decreaseSpeed);
+    final JoystickButton rampUpShooter = new JoystickButton(xBoxController, Constants.rampUpShooter);
+    final JoystickButton rampDownShooter = new JoystickButton(xBoxController, Constants.rampDownShooter);
 
-    JoystickButton increaseConveyor = new JoystickButton(primaryJoystick, Constants.increaseConveyor);
-    JoystickButton decreaseConveyor = new JoystickButton(primaryJoystick, Constants.decreaseConveyor);
-    JoystickButton increaseIntake = new JoystickButton(primaryJoystick, Constants.increaseIntake);
-    JoystickButton decreaseIntake = new JoystickButton(primaryJoystick, Constants.decreaseIntake);
-    JoystickButton increaseInner = new JoystickButton(primaryJoystick, Constants.increaseInner);
-    JoystickButton decreaseInner = new JoystickButton(primaryJoystick, Constants.decreaseInner);
-    JoystickButton invertClimber = new JoystickButton(primaryJoystick, Constants.invertClimber);
-    JoystickButton stopCompressor = new JoystickButton(primaryJoystick, Constants.stopCompressor);
-    JoystickButton fireSolenoid = new JoystickButton(primaryJoystick, Constants.fireSolenoid);
+    final JoystickButton increaseConveyor = new JoystickButton(primaryJoystick, Constants.increaseConveyor);
+    final JoystickButton decreaseConveyor = new JoystickButton(primaryJoystick, Constants.decreaseConveyor);
+    final JoystickButton increaseIntake = new JoystickButton(primaryJoystick, Constants.increaseIntake);
+    final JoystickButton decreaseIntake = new JoystickButton(primaryJoystick, Constants.decreaseIntake);
+    final JoystickButton increaseInner = new JoystickButton(primaryJoystick, Constants.increaseInner);
+    final JoystickButton decreaseInner = new JoystickButton(primaryJoystick, Constants.decreaseInner);
+    final JoystickButton invertClimber = new JoystickButton(primaryJoystick, Constants.invertClimber);
+    final JoystickButton stopCompressor = new JoystickButton(primaryJoystick, Constants.stopCompressor);
+    final JoystickButton fireSolenoid = new JoystickButton(xBoxController, Constants.fireSolenoid);
 
     switchDriveMode.whenPressed(new SwitchDriveMode());
     reverseButton.whenPressed(new Reverse());
@@ -164,7 +167,7 @@ public class Robot extends TimedRobot {
 
     compressor = new Compressor(Constants.compressorPort);
     Constants.compressor = compressor;
-    solenoid = new Solenoid(Constants.solenoid1, Constants.solenoid2);
+    solenoid = new DoubleSolenoid(6, 6, 7);
     Constants.solenoid = solenoid;
     compressor.start();
   }
@@ -173,7 +176,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
-    double leftPOV = xBoxController.getPOV(0);
+    final double leftPOV = xBoxController.getPOV(0);
     if (leftPOV == 0) {
       conveyorMotor.set(Constants.conveyorSpeed);
     }
@@ -189,6 +192,9 @@ public class Robot extends TimedRobot {
     }
     if (leftPOV == 180) {
       conveyorMotor.set(0);
+      compressor.start();
+      compressor.setClosedLoopControl(true);
+      Constants.solenoid.set(DoubleSolenoid.Value.kForward);
     }
 
     SmartDashboard.putNumber("Left POV", leftPOV);
@@ -204,6 +210,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    server.close();
   }
 
   @Override
@@ -248,7 +255,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
   }
 
-  public void setMotor(double frontLeft, double frontRight, double backLeft, double backRight) {
+  public void setMotor(final double frontLeft, final double frontRight, final double backLeft, final double backRight) {
     this.frontLeft.set(ControlMode.PercentOutput, frontLeft);
     this.frontRight.set(ControlMode.PercentOutput, frontRight);
     this.backLeft.set(ControlMode.PercentOutput, backLeft);
@@ -273,21 +280,21 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //Get instances of motors
-    VictorSPX frontLeft = Constants.frontLeft;
-    VictorSPX frontRight = Constants.frontRight;
-    VictorSPX backLeft = Constants.backLeft;
-    VictorSPX backRight = Constants.backRight;
-    Talon elevator = Constants.elevator;
+    final VictorSPX frontLeft = Constants.frontLeft;
+    final VictorSPX frontRight = Constants.frontRight;
+    final VictorSPX backLeft = Constants.backLeft;
+    final VictorSPX backRight = Constants.backRight;
+    final Talon elevator = Constants.elevator;
 
     //Get joystick positions
-    double primaryX = Constants.joystickPrimary.getRawAxis(0);
+    final double primaryX = Constants.joystickPrimary.getRawAxis(0);
     double primaryY = Constants.joystickPrimary.getRawAxis(1);
-    double primaryZ = Constants.joystickPrimary.getTwist();
+    final double primaryZ = Constants.joystickPrimary.getTwist();
     double secondaryY = Constants.joystickSecondary.getRawAxis(1);
     
     //Get XBox Controller status
-    double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
-    double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
+    final double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
+    final double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
     //Hold down right button to run all intake systems
     if (xBoxController.getRawButton(Constants.intakeForward)) {
@@ -310,7 +317,7 @@ public class Robot extends TimedRobot {
     }
 
     //Crawl speed with joystick POV
-    double primaryPOV = primaryJoystick.getPOV();
+    final double primaryPOV = primaryJoystick.getPOV();
     if (primaryPOV == 0) {
       frontLeft.setInverted(false);
       frontRight.setInverted(false);
@@ -368,8 +375,8 @@ public class Robot extends TimedRobot {
       //Arcade drive
       double joyX = primaryJoystick.getRawAxis(0) * -1;
       double joyY = primaryJoystick.getRawAxis(1);
-      double twist = primaryJoystick.getRawAxis(2);
-      double slider = (primaryJoystick.getRawAxis(3) * 2) - 1;
+      final double twist = primaryJoystick.getRawAxis(2);
+      final double slider = (primaryJoystick.getRawAxis(3) * 2) - 1;
 
       if (joyX > (Constants.deadZone * -1) && joyX < Constants.deadZone) {
         joyX = 0;
