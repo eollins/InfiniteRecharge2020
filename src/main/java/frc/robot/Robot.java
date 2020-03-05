@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -32,6 +33,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.ChangeIntakeSpeed;
 import frc.robot.commands.ChangeMotorMultiplier;
 import frc.robot.commands.RampUpMotor;
 import frc.robot.commands.Reverse;
@@ -61,6 +63,7 @@ public class Robot extends TimedRobot {
   private Talon innerIntake2;
 
   private Encoder encoder;
+  private AHRS ahrs;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -99,6 +102,8 @@ public class Robot extends TimedRobot {
     innerIntake1.setInverted(true);
     conveyorMotor.setInverted(true);
 
+    //ahrs = new AHRS()
+
     // Instantiate joysticks/controllers
     primaryJoystick = new Joystick(Constants.primaryJoystick);
     Constants.joystickPrimary = primaryJoystick;
@@ -114,6 +119,15 @@ public class Robot extends TimedRobot {
     JoystickButton toggleTwisty = new JoystickButton(primaryJoystick, Constants.toggleTwisty);
     JoystickButton increaseSpeed = new JoystickButton(primaryJoystick, Constants.increaseSpeed);
     JoystickButton decreaseSpeed = new JoystickButton(primaryJoystick, Constants.decreaseSpeed);
+    JoystickButton rampUpShooter = new JoystickButton(xBoxController, Constants.rampUpShooter);
+    JoystickButton rampDownShooter = new JoystickButton(xBoxController, Constants.rampDownShooter);
+
+    JoystickButton increaseConveyor = new JoystickButton(primaryJoystick, Constants.increaseConveyor);
+    JoystickButton decreaseConveyor = new JoystickButton(primaryJoystick, Constants.decreaseConveyor);
+    JoystickButton increaseIntake = new JoystickButton(primaryJoystick, Constants.increaseIntake);
+    JoystickButton decreaseIntake = new JoystickButton(primaryJoystick, Constants.decreaseIntake);
+    JoystickButton increaseInner = new JoystickButton(primaryJoystick, Constants.increaseInner);
+    JoystickButton decreaseInner = new JoystickButton(primaryJoystick, Constants.decreaseInner);
 
     switchDriveMode.whenPressed(new SwitchDriveMode());
     reverseButton.whenPressed(new Reverse());
@@ -122,44 +136,48 @@ public class Robot extends TimedRobot {
     increaseSpeed.whenPressed(new ChangeMotorMultiplier(Constants.motorMultiplier, true));
     decreaseSpeed.whenPressed(new ChangeMotorMultiplier(Constants.motorMultiplier, false));
 
+    increaseConveyor.whenPressed(new ChangeIntakeSpeed(0, true));
+    decreaseConveyor.whenPressed(new ChangeIntakeSpeed(0, false));
+    increaseIntake.whenPressed(new ChangeIntakeSpeed(1, true));
+    decreaseIntake.whenPressed(new ChangeIntakeSpeed(1, false));
+    increaseInner.whenPressed(new ChangeIntakeSpeed(2, true));
+    decreaseInner.whenPressed(new ChangeIntakeSpeed(2, false));
+    rampUpShooter.whenPressed(new RampUpMotor(true));
+    rampDownShooter.whenPressed(new RampUpMotor(false));
+
     encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
     Constants.encoder = encoder;
+    encoder.setDistancePerPulse(4./256.);
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for
-   * items like diagnostics that you want ran during disabled, autonomous,
-   * teleoperated and test.
-   *
-   * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
-   * and SmartDashboard integrated updating.
-   */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
     double leftPOV = xBoxController.getPOV(0);
     if (leftPOV == 0) {
-      RampUpMotor rampUp = new RampUpMotor(true);
-      rampUp.initialize();
+      conveyorMotor.set(Constants.conveyorSpeed);
+    }
+    if (leftPOV == 90) {
+      intakeMotor.set(Constants.intakeSpeed);
+      innerIntake1.set(Constants.innerSpeed);
+      innerIntake2.set(Constants.innerSpeed);
+    }
+    if (leftPOV == -90) {
+      intakeMotor.set(0);
+      innerIntake1.set(0);
+      innerIntake2.set(0);
     }
     if (leftPOV == 180) {
-      RampUpMotor rampDown = new RampUpMotor(false);
-      rampDown.initialize();
+      conveyorMotor.set(0);
     }
 
     SmartDashboard.putNumber("Left POV", leftPOV);
     SmartDashboard.putNumber("Motor multiplier", Constants.increaseIntakeBy);
     SmartDashboard.putNumber("Maximum motor power", Constants.intakePower);
     SmartDashboard.putNumber("Current speed", intakeMotor.getSpeed());
+
+    //System.out.println(encoder.getDistance());
   }
 
   /**
@@ -179,14 +197,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // Import autonomous paths
-    String path = "paths/TestPath.path";
-    Path importedPath = Filesystem.getDeployDirectory().toPath().resolve(path);
-    try {
-      Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(importedPath);
-      DifferentialDrive drive = new DifferentialDrive(new SpeedControllerGroup((SpeedController)frontLeft, (SpeedController)frontRight), new SpeedControllerGroup((SpeedController)frontRight, (SpeedController)backRight));
-    } catch (IOException e) {
-      e.printStackTrace();
+    //Move off of initiation line
+    SmartDashboard.putNumber("First leg", 50);
+
+    double startingDist = encoder.getDistance();
+    while (startingDist < SmartDashboard.getNumber("First leg", 0)) {
+      frontLeft.set(ControlMode.PercentOutput, 0.5);
+      frontRight.set(ControlMode.PercentOutput, 0.5);
+      backLeft.set(ControlMode.PercentOutput, 0.5);
+      backRight.set(ControlMode.PercentOutput, 0.5);
     }
   }
 
@@ -211,6 +230,7 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
+  boolean intakePressed = false;
   @Override
   public void teleopPeriodic() {
     //Get instances of motors
@@ -231,16 +251,37 @@ public class Robot extends TimedRobot {
     double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
     if (xBoxController.getRawButton(5)) {
-      Constants.intakeMotor.set(0.6);
-      Constants.innerIntake1.set(0.5);
-      Constants.innerIntake2.set(0.5);
-      Constants.conveyorMotor.set(0.8);
+      if (intakePressed == false) {
+        Constants.intakeMotor.set(Constants.intakeSpeed);
+        Constants.innerIntake1.set(Constants.innerSpeed);
+        Constants.innerIntake2.set(Constants.innerSpeed);
+        Constants.conveyorMotor.set(Constants.conveyorSpeed);
+        intakePressed = true;
+      }
     }
-    else if (xBoxController.getRawButton(6)) {
-      Constants.intakeMotor.set(0);
-      Constants.innerIntake1.set(0);
-      Constants.innerIntake2.set(0);
-      Constants.conveyorMotor.set(0);
+    else {
+      if (intakePressed == true) {
+        Constants.intakeMotor.set(0);
+        Constants.innerIntake1.set(0);
+        Constants.innerIntake2.set(0);
+        Constants.conveyorMotor.set(0);
+        intakePressed = false;
+      }
+    }
+
+    if (xBoxController.getRawButton(6)) {
+      if (intakeMotor.getInverted()) {
+        intakeMotor.setInverted(false);
+        innerIntake1.setInverted(false);
+        innerIntake2.setInverted(false);
+        conveyorMotor.setInverted(false);
+      }
+      else {
+        intakeMotor.setInverted(true);
+        innerIntake1.setInverted(true);
+        innerIntake2.setInverted(true);
+        conveyorMotor.setInverted(true);
+      }
     }
 
     if (Constants.driveMode == 0) {
