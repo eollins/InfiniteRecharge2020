@@ -199,14 +199,27 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     //Move off of initiation line
     SmartDashboard.putNumber("First leg", 50);
+    SmartDashboard.putNumber("Second leg", 70);
+    SmartDashboard.putNumber("Third leg", 25);
 
     double startingDist = encoder.getDistance();
-    while (startingDist < SmartDashboard.getNumber("First leg", 0)) {
-      frontLeft.set(ControlMode.PercentOutput, 0.5);
-      frontRight.set(ControlMode.PercentOutput, 0.5);
-      backLeft.set(ControlMode.PercentOutput, 0.5);
-      backRight.set(ControlMode.PercentOutput, 0.5);
+    while (encoder.getDistance() < startingDist + SmartDashboard.getNumber("First leg", 0)) {
+      setMotor(0.5, 0.5, 0.5, 0.5);
     }
+    setMotor(0, 0, 0.5, 0.5);
+
+    startingDist = encoder.getDistance();
+    while (encoder.getDistance() < startingDist + SmartDashboard.getNumber("Second leg", 0)) {
+      setMotor(0.5, 0.5, 0.5, 0.5);
+    }
+    setMotor(0.5, 0.5, 0, 0);
+  
+    startingDist = encoder.getDistance();
+    while (encoder.getDistance() < startingDist + SmartDashboard.getNumber("Third leg", 0)) {
+      setMotor(0.5, 0.5, 0.5, 0.5);
+    }
+    
+    setMotor(0, 0, 0, 0);
   }
 
   /**
@@ -214,6 +227,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+  }
+
+  public void setMotor(double frontLeft, double frontRight, double backLeft, double backRight) {
+    this.frontLeft.set(ControlMode.PercentOutput, frontLeft);
+    this.frontRight.set(ControlMode.PercentOutput, frontRight);
+    this.backLeft.set(ControlMode.PercentOutput, backLeft);
+    this.backRight.set(ControlMode.PercentOutput, backRight);
   }
 
   @Override
