@@ -40,9 +40,9 @@ public final class Constants {
   public static final int innerIntake1Port = 3; //PWM
   public static final int innerIntake2Port = 4; //PWM
   public static final int conveyorMotorPort = 2; //PWM
-  public static final int compressorPort = 0; //CAN
-  public static final int solenoid1 = 0;
-  public static final int solenoid2 = 1;
+  public static final int compressorPort = 6; //CAN
+  public static final int solenoid1 = 4;
+  public static final int solenoid2 = 5;
   
   
   //Joystick port mappings
@@ -92,6 +92,9 @@ public final class Constants {
   public static final int decreaseInner = 12; //joy
   public static final int rampUpShooter = 1; //xbox
   public static final int rampDownShooter = 2; //xbox
+  public static final int invertClimber = 8; //xbox
+  public static final int stopCompressor = 7; //xbox
+  public static final int fireSolenoid = 4; //xbox
 
   //Status/mode information
   public static int driveMode = 0;

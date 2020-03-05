@@ -37,8 +37,11 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.ChangeIntakeSpeed;
 import frc.robot.commands.ChangeMotorMultiplier;
+import frc.robot.commands.FireSolenoid;
+import frc.robot.commands.InvertClimber;
 import frc.robot.commands.RampUpMotor;
 import frc.robot.commands.Reverse;
+import frc.robot.commands.StopCompressor;
 import frc.robot.commands.SwitchDriveMode;
 import frc.robot.commands.ToggleTwisty;
 import frc.robot.subsystems.ShooterMotor;
@@ -132,6 +135,9 @@ public class Robot extends TimedRobot {
     JoystickButton decreaseIntake = new JoystickButton(primaryJoystick, Constants.decreaseIntake);
     JoystickButton increaseInner = new JoystickButton(primaryJoystick, Constants.increaseInner);
     JoystickButton decreaseInner = new JoystickButton(primaryJoystick, Constants.decreaseInner);
+    JoystickButton invertClimber = new JoystickButton(primaryJoystick, Constants.invertClimber);
+    JoystickButton stopCompressor = new JoystickButton(primaryJoystick, Constants.stopCompressor);
+    JoystickButton fireSolenoid = new JoystickButton(primaryJoystick, Constants.fireSolenoid);
 
     switchDriveMode.whenPressed(new SwitchDriveMode());
     reverseButton.whenPressed(new Reverse());
@@ -148,14 +154,17 @@ public class Robot extends TimedRobot {
     decreaseInner.whenPressed(new ChangeIntakeSpeed(2, false));
     rampUpShooter.whenPressed(new RampUpMotor(true));
     rampDownShooter.whenPressed(new RampUpMotor(false));
+    invertClimber.whenPressed(new InvertClimber());
+    stopCompressor.whenPressed(new StopCompressor());
+    fireSolenoid.whenPressed(new FireSolenoid());
 
     encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
     Constants.encoder = encoder;
     encoder.setDistancePerPulse(4./256.);
 
-    compressor = new Compressor(5);
+    compressor = new Compressor(Constants.compressorPort);
     Constants.compressor = compressor;
-    solenoid = new Solenoid(0, 1);
+    solenoid = new Solenoid(Constants.solenoid1, Constants.solenoid2);
     Constants.solenoid = solenoid;
     compressor.start();
   }
@@ -180,7 +189,6 @@ public class Robot extends TimedRobot {
     }
     if (leftPOV == 180) {
       conveyorMotor.set(0);
-      solenoid.set(true);
     }
 
     SmartDashboard.putNumber("Left POV", leftPOV);
@@ -271,8 +279,6 @@ public class Robot extends TimedRobot {
     VictorSPX backRight = Constants.backRight;
     Talon elevator = Constants.elevator;
 
-    
-
     //Get joystick positions
     double primaryX = Constants.joystickPrimary.getRawAxis(0);
     double primaryY = Constants.joystickPrimary.getRawAxis(1);
@@ -303,6 +309,7 @@ public class Robot extends TimedRobot {
       }
     }
 
+    //Crawl speed with joystick POV
     double primaryPOV = primaryJoystick.getPOV();
     if (primaryPOV == 0) {
       frontLeft.setInverted(false);
