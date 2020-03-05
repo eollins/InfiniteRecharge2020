@@ -105,9 +105,7 @@ public class Robot extends TimedRobot {
     conveyorMotor = new VictorSP(Constants.conveyorMotorPort);
     Constants.conveyorMotor = conveyorMotor;
 
-    camera = new UsbCamera("USB Camera", 0);
-    server = new MjpegServer("serve_USB Camera 0", 1181);
-    server.setSource(camera);
+    CameraServer.getInstance().startAutomaticCapture();
 
     innerIntake1.setInverted(true);
     conveyorMotor.setInverted(true);
@@ -210,7 +208,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    server.close();
+    
   }
 
   @Override
