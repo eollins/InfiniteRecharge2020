@@ -16,9 +16,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
@@ -64,6 +66,8 @@ public class Robot extends TimedRobot {
 
   private Encoder encoder;
   private AHRS ahrs;
+  private Compressor compressor;
+  private Solenoid solenoid;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -148,6 +152,12 @@ public class Robot extends TimedRobot {
     encoder = new Encoder(Constants.encoderChannelA, Constants.encoderChannelB);
     Constants.encoder = encoder;
     encoder.setDistancePerPulse(4./256.);
+
+    compressor = new Compressor(5);
+    Constants.compressor = compressor;
+    solenoid = new Solenoid(0, 1);
+    Constants.solenoid = solenoid;
+    compressor.start();
   }
 
   @Override
@@ -163,13 +173,14 @@ public class Robot extends TimedRobot {
       innerIntake1.set(Constants.innerSpeed);
       innerIntake2.set(Constants.innerSpeed);
     }
-    if (leftPOV == -90) {
+    if (leftPOV == 270) {
       intakeMotor.set(0);
       innerIntake1.set(0);
       innerIntake2.set(0);
     }
     if (leftPOV == 180) {
       conveyorMotor.set(0);
+      solenoid.set(true);
     }
 
     SmartDashboard.putNumber("Left POV", leftPOV);
@@ -260,6 +271,8 @@ public class Robot extends TimedRobot {
     VictorSPX backRight = Constants.backRight;
     Talon elevator = Constants.elevator;
 
+    
+
     //Get joystick positions
     double primaryX = Constants.joystickPrimary.getRawAxis(0);
     double primaryY = Constants.joystickPrimary.getRawAxis(1);
@@ -270,7 +283,8 @@ public class Robot extends TimedRobot {
     double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
     double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
-    if (xBoxController.getRawButton(5)) {
+    //Hold down right button to run all intake systems
+    if (xBoxController.getRawButton(Constants.intakeForward)) {
       if (intakePressed == false) {
         Constants.intakeMotor.set(Constants.intakeSpeed);
         Constants.innerIntake1.set(Constants.innerSpeed);
@@ -289,18 +303,57 @@ public class Robot extends TimedRobot {
       }
     }
 
-    if (xBoxController.getRawButton(6)) {
-      if (intakeMotor.getInverted()) {
-        intakeMotor.setInverted(false);
-        innerIntake1.setInverted(false);
-        innerIntake2.setInverted(false);
-        conveyorMotor.setInverted(false);
+    double primaryPOV = primaryJoystick.getPOV();
+    if (primaryPOV == 0) {
+      frontLeft.setInverted(false);
+      frontRight.setInverted(false);
+      backLeft.setInverted(false);
+      backRight.setInverted(false);
+
+      frontLeft.set(ControlMode.PercentOutput, Constants.crawlSpeed);
+      frontRight.set(ControlMode.PercentOutput, Constants.crawlSpeed * -1);
+      backLeft.set(ControlMode.PercentOutput, Constants.crawlSpeed);
+      frontRight.set(ControlMode.PercentOutput, Constants.crawlSpeed * -1);
+    }
+    else if (primaryPOV == 90) {
+      frontLeft.set(ControlMode.PercentOutput, Constants.crawlSpeed);
+      backLeft.set(ControlMode.PercentOutput, Constants.crawlSpeed);
+    }
+    else if (primaryPOV == 180) {
+      frontLeft.setInverted(true);
+      frontRight.setInverted(true);
+      backLeft.setInverted(true);
+      backRight.setInverted(true);
+
+      frontLeft.set(ControlMode.PercentOutput, Constants.crawlSpeed);
+      frontRight.set(ControlMode.PercentOutput, Constants.crawlSpeed * -1);
+      backLeft.set(ControlMode.PercentOutput, Constants.crawlSpeed);
+      backRight.set(ControlMode.PercentOutput, Constants.crawlSpeed * -1);
+    }
+    else if (primaryPOV == 270) {
+      frontRight.set(ControlMode.PercentOutput, Constants.crawlSpeed);
+      backRight.set(ControlMode.PercentOutput, Constants.crawlSpeed);
+    }
+    else {
+      frontLeft.set(ControlMode.PercentOutput, 0);
+      frontRight.set(ControlMode.PercentOutput, 0);
+      backLeft.set(ControlMode.PercentOutput, 0);
+      backRight.set(ControlMode.PercentOutput, 0);
+    }
+
+    //Toggle all intake systems from the side button
+    if (xBoxController.getRawButton(Constants.intakeBackward)) {
+      if (intakeMotor.get() == Constants.intakeSpeed) {
+        intakeMotor.set(0);
+        innerIntake1.set(0);
+        innerIntake2.set(0);
+        conveyorMotor.set(0);
       }
       else {
-        intakeMotor.setInverted(true);
-        innerIntake1.setInverted(true);
-        innerIntake2.setInverted(true);
-        conveyorMotor.setInverted(true);
+        intakeMotor.set(Constants.intakeSpeed);
+        innerIntake1.set(Constants.innerSpeed);
+        innerIntake2.set(Constants.innerSpeed);
+        conveyorMotor.set(Constants.conveyorSpeed);
       }
     }
 

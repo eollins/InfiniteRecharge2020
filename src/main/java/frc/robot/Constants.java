@@ -9,8 +9,11 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.XboxController;
@@ -33,10 +36,14 @@ public final class Constants {
   public static final int backRightMotor = 4; //CAN
   public static final int elevatorMotor = 0; //PWM
   public static final int intakeMotorPort = 1; //PWM
-  public static final int shooterMotorPort = 0; //CAN
+  public static final int shooterMotorPort = 5; //CAN
   public static final int innerIntake1Port = 3; //PWM
   public static final int innerIntake2Port = 4; //PWM
   public static final int conveyorMotorPort = 2; //PWM
+  public static final int compressorPort = 0; //CAN
+  public static final int solenoid1 = 0;
+  public static final int solenoid2 = 1;
+  
   
   //Joystick port mappings
   public static final int primaryJoystick = 0;
@@ -94,8 +101,8 @@ public final class Constants {
   public static double deadZone = 0.1;
   public static boolean twisty = false;
   public static double motorMultiplier = 1;
-  public static double maximumIntakePower = 0.8;
-  public static double increaseIntakeBy = 0.0005;
+  public static double maximumIntakePower = 0.6;
+  public static double increaseIntakeBy = 0.1;
 
   public static double kP = 0.03;
   public static double kF = 0.00;
@@ -105,4 +112,8 @@ public final class Constants {
   public static double conveyorSpeed = 0.8;
   public static double intakeSpeed = 0.6;
   public static double innerSpeed = 0.5;
+  public static double crawlSpeed = 0.2;
+
+  public static Compressor compressor;
+  public static Solenoid solenoid;
 }
