@@ -45,6 +45,7 @@ import frc.robot.commands.InvertClimber;
 import frc.robot.commands.RampUpMotor;
 import frc.robot.commands.RetractSolenoid;
 import frc.robot.commands.Reverse;
+import frc.robot.commands.RotateByAngle;
 import frc.robot.commands.StopCompressor;
 import frc.robot.commands.SwitchDriveMode;
 import frc.robot.commands.ToggleTwisty;
@@ -143,12 +144,12 @@ public class Robot extends TimedRobot {
     final JoystickButton rampUpShooter = new JoystickButton(xBoxController, Constants.rampUpShooter);
     final JoystickButton rampDownShooter = new JoystickButton(xBoxController, Constants.rampDownShooter);
 
-    // final JoystickButton increaseConveyor = new JoystickButton(primaryJoystick, Constants.increaseConveyor);
-    // final JoystickButton decreaseConveyor = new JoystickButton(primaryJoystick, Constants.decreaseConveyor);
-    // final JoystickButton increaseIntake = new JoystickButton(primaryJoystick, Constants.increaseIntake);
-    // final JoystickButton decreaseIntake = new JoystickButton(primaryJoystick, Constants.decreaseIntake);
-    // final JoystickButton increaseInner = new JoystickButton(primaryJoystick, Constants.increaseInner);
-    // final JoystickButton decreaseInner = new JoystickButton(primaryJoystick, Constants.decreaseInner);
+    final JoystickButton angleOneLeft = new JoystickButton(primaryJoystick, Constants.angleOneLeft);
+    final JoystickButton angleOneRight = new JoystickButton(primaryJoystick, Constants.angleOneRight);
+    final JoystickButton angleTwoLeft = new JoystickButton(primaryJoystick, Constants.angleTwoLeft);
+    final JoystickButton angleTwoRight = new JoystickButton(primaryJoystick, Constants.angleTwoRight);
+    final JoystickButton angleThreeLeft = new JoystickButton(primaryJoystick, Constants.angleThreeLeft);
+    final JoystickButton angleThreeRight = new JoystickButton(primaryJoystick, Constants.angleThreeRight);
     final JoystickButton invertClimber = new JoystickButton(primaryJoystick, Constants.invertClimber);
     final JoystickButton stopCompressor = new JoystickButton(xBoxController, Constants.stopCompressor);
     final JoystickButton fireSolenoid = new JoystickButton(xBoxController, Constants.fireSolenoid);
@@ -161,12 +162,12 @@ public class Robot extends TimedRobot {
     increaseSpeed.whenPressed(new ChangeMotorMultiplier(Constants.motorMultiplier, true));
     decreaseSpeed.whenPressed(new ChangeMotorMultiplier(Constants.motorMultiplier, false));
 
-    // increaseConveyor.whenPressed(new ChangeIntakeSpeed(0, true));
-    // decreaseConveyor.whenPressed(new ChangeIntakeSpeed(0, false));
-    // increaseIntake.whenPressed(new ChangeIntakeSpeed(1, true));
-    // decreaseIntake.whenPressed(new ChangeIntakeSpeed(1, false));
-    // increaseInner.whenPressed(new ChangeIntakeSpeed(2, true));
-    // decreaseInner.whenPressed(new ChangeIntakeSpeed(2, false));
+    angleOneLeft.whenPressed(new RotateByAngle(Constants.angleOne, false));
+    angleOneRight.whenPressed(new RotateByAngle(Constants.angleOne, true));
+    angleTwoLeft.whenPressed(new RotateByAngle(Constants.angleTwo, false));
+    angleTwoRight.whenPressed(new RotateByAngle(Constants.angleTwo, true));
+    angleThreeLeft.whenPressed(new RotateByAngle(Constants.angleThree, false));
+    angleThreeRight.whenPressed(new RotateByAngle(Constants.angleThree, true));
     rampUpShooter.whenPressed(new RampUpMotor(true));
     rampDownShooter.whenPressed(new RampUpMotor(false));
     invertClimber.whenPressed(new InvertClimber());

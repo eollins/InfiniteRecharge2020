@@ -45,6 +45,19 @@ public class RotateByAngle extends CommandBase {
         Constants.backRight.set(ControlMode.PercentOutput, 0.3);
       }
     }
+    else {
+      while (Robot.ahrs.getAngle() > targetAngle) {
+        Constants.frontLeft.set(ControlMode.PercentOutput, -0.3);
+        Constants.frontRight.set(ControlMode.PercentOutput, -0.3);
+        Constants.backLeft.set(ControlMode.PercentOutput, -0.3);
+        Constants.backRight.set(ControlMode.PercentOutput, -0.3);
+      }
+    }
+
+    Constants.frontLeft.set(ControlMode.PercentOutput, 0);
+    Constants.frontRight.set(ControlMode.PercentOutput, 0);
+    Constants.backLeft.set(ControlMode.PercentOutput, 0);
+    Constants.backRight.set(ControlMode.PercentOutput, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
