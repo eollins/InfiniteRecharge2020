@@ -7,23 +7,23 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 
-public class SwitchDriveMode extends CommandBase {
+public class RetractSolenoid extends CommandBase {
   /**
-   * Creates a new SwitchDriveMode.
+   * Creates a new RetractSolenoid.
    */
   boolean finished = false;
-  public SwitchDriveMode() {
+  public RetractSolenoid() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println(Constants.encoder.getDistance() - Constants.startingDist);
-    Constants.startingDist = Constants.encoder.getDistance();
+    Constants.solenoid.set(DoubleSolenoid.Value.kReverse);
     finished = true;
   }
 

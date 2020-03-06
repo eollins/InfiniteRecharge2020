@@ -85,12 +85,12 @@ public final class Constants {
   public static final int toggleTwisty = 7; //joy
   public static final int increaseSpeed = 6; //joy
   public static final int decreaseSpeed = 4; //joy
-  public static final int increaseConveyor = 7; //joy
-  public static final int decreaseConveyor = 8; //joy
-  public static final int increaseIntake = 9; //joy
-  public static final int decreaseIntake = 10; //joy
-  public static final int increaseInner = 11; //joy
-  public static final int decreaseInner = 12; //joy
+  public static final int angleOneLeft = 7; //joy
+  public static final int angleOneRight = 8; //joy
+  public static final int angleTwoLeft = 9; //joy
+  public static final int angleTwoRight = 10; //joy
+  public static final int angleThreeLeft = 11; //joy
+  public static final int angleThreeRight = 12; //joy
   public static final int rampUpShooter = 1; //xbox
   public static final int rampDownShooter = 2; //xbox
   public static final int invertClimber = 8; //xbox
@@ -107,6 +107,7 @@ public final class Constants {
   public static double motorMultiplier = 1;
   public static double maximumIntakePower = 0.7;
   public static double increaseIntakeBy = 0.1;
+  public static double startingDist = 0;
 
   public static double kP = 0.03;
   public static double kF = 0.00;
@@ -117,6 +118,9 @@ public final class Constants {
   public static double intakeSpeed = 0.6;
   public static double innerSpeed = 0.5;
   public static double crawlSpeed = 0.2;
+  public static double angleOne = 10;
+  public static double angleTwo = 30;
+  public static double angleThree = 90;
 
   public static Compressor compressor;
   public static DoubleSolenoid solenoid;

@@ -7,24 +7,44 @@
 
 package frc.robot.commands;
 
+import java.lang.invoke.ConstantBootstraps;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
-public class SwitchDriveMode extends CommandBase {
+public class RotateByAngle extends CommandBase {
   /**
-   * Creates a new SwitchDriveMode.
+   * Creates a new RotateByAngle.
    */
   boolean finished = false;
-  public SwitchDriveMode() {
+  double degrees = 0;
+  boolean direction = false;
+  public RotateByAngle(double degrees, boolean direction) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.degrees = degrees;
+    this.direction = direction;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println(Constants.encoder.getDistance() - Constants.startingDist);
-    Constants.startingDist = Constants.encoder.getDistance();
-    finished = true;
+    double currentAngle = Robot.ahrs.getAngle();
+    if (!direction) {
+      degrees *= -1;
+    }
+    double targetAngle = currentAngle + degrees;
+    
+    if (direction) {
+      while (Robot.ahrs.getAngle() < targetAngle) {
+        Constants.frontLeft.set(ControlMode.PercentOutput, 0.3);
+        Constants.frontRight.set(ControlMode.PercentOutput, 0.3);
+        Constants.backLeft.set(ControlMode.PercentOutput, 0.3);
+        Constants.backRight.set(ControlMode.PercentOutput, 0.3);
+      }
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
