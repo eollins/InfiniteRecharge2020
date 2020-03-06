@@ -38,24 +38,31 @@ public class ShooterMotor extends SubsystemBase {
     double speed = intakeMotor.getMotorOutputPercent();
 
     if (direction) {
-      if (speed > maximumIntakePower) {
-        intakeMotor.set(ControlMode.PercentOutput, maximumIntakePower);
-      }
-      else if (maximumIntakePower - speed < increaseBy) {
-        intakeMotor.set(ControlMode.PercentOutput, maximumIntakePower);
-      }
-      else {
-        intakeMotor.set(ControlMode.PercentOutput, speed + increaseBy);
-      }
+      intakeMotor.set(ControlMode.PercentOutput, 0.6);
     }
     else {
-      if (speed < increaseBy) {
-        intakeMotor.set(ControlMode.PercentOutput, 0);
-      }
-      else {
-        intakeMotor.set(ControlMode.PercentOutput, speed - increaseBy);
-      }
+      intakeMotor.set(ControlMode.PercentOutput, 0);
     }
+
+    // if (direction) {
+    //   if (speed > maximumIntakePower) {
+    //     intakeMotor.set(ControlMode.PercentOutput, maximumIntakePower);
+    //   }
+    //   else if (maximumIntakePower - speed < increaseBy) {
+    //     intakeMotor.set(ControlMode.PercentOutput, maximumIntakePower);
+    //   }
+    //   else {
+    //     intakeMotor.set(ControlMode.PercentOutput, speed + increaseBy);
+    //   }
+    // }
+    // else {
+    //   if (speed < increaseBy) {
+    //     intakeMotor.set(ControlMode.PercentOutput, 0);
+    //   }
+    //   else {
+    //     intakeMotor.set(ControlMode.PercentOutput, speed - increaseBy);
+    //   }
+    // }
   }
 
   public static void StopMotor() {
