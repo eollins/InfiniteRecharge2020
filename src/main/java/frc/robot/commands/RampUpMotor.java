@@ -7,7 +7,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.ShooterMotor;
 
 public class RampUpMotor extends CommandBase {
@@ -25,6 +27,14 @@ public class RampUpMotor extends CommandBase {
   @Override
   public void initialize() {
     ShooterMotor.RampMotor(directionToRamp);
+
+    if (directionToRamp) {
+      //Constants.solenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+    else {
+      //Constants.solenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
     finished = true;
   }
 

@@ -323,6 +323,21 @@ public class Robot extends TimedRobot {
     final double xBoxPosition = Constants.xBoxController.getTriggerAxis(Hand.kRight);
     final double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
+    if (xBoxController.getRawButton(Constants.intakeBackward)) {
+      if (Constants.intakeMotor.getInverted()) {
+        Constants.intakeMotor.setInverted(false);
+        Constants.innerIntake1.setInverted(false);
+        Constants.innerIntake2.setInverted(false);
+        Constants.conveyorMotor.setInverted(false);
+      }
+      else {
+        Constants.intakeMotor.setInverted(true);
+        Constants.innerIntake1.setInverted(true);
+        Constants.innerIntake2.setInverted(true);
+        Constants.conveyorMotor.setInverted(true);
+      }
+    }
+
     //Hold down right button to run all intake systems
     if (xBoxController.getRawButton(Constants.intakeForward)) {
       if (intakePressed == false) {
