@@ -50,7 +50,7 @@ import frc.robot.commands.StopCompressor;
 import frc.robot.commands.SwitchDriveMode;
 import frc.robot.commands.ToggleTwisty;
 import frc.robot.subsystems.ShooterMotor;
-import com.kauailabs.navx.frc.*;
+//import com.kauailabs.navx.frc.*;
 
 public class Robot extends TimedRobot {
   private Subsystem driveTrain;
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
 
   private UsbCamera camera;
   private MjpegServer server;
-  public static AHRS ahrs;
+  //public static AHRS ahrs;
   private DifferentialDrive drive;
   private PIDController turnController;
 
@@ -124,7 +124,7 @@ public class Robot extends TimedRobot {
     innerIntake1.setInverted(true);
     conveyorMotor.setInverted(true);
 
-    ahrs = new AHRS(SerialPort.Port.kMXP);
+    //ahrs = new AHRS(SerialPort.Port.kMXP);
 
     // Instantiate joysticks/controllers
     primaryJoystick = new Joystick(Constants.primaryJoystick);
@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
     final JoystickButton invertClimber = new JoystickButton(primaryJoystick, Constants.invertClimber);
     final JoystickButton stopCompressor = new JoystickButton(xBoxController, Constants.stopCompressor);
     final JoystickButton fireSolenoid = new JoystickButton(xBoxController, Constants.fireSolenoid);
-    final JoystickButton retractSolenoid = new JoystickButton(xBoxController, 3);
+    final JoystickButton retractSolenoid = new JoystickButton(xBoxController, Constants.retractSolenoid);
 
     switchDriveMode.whenPressed(new SwitchDriveMode());
     reverseButton.whenPressed(new Reverse());
@@ -184,6 +184,11 @@ public class Robot extends TimedRobot {
     solenoid = new DoubleSolenoid(6, 6, 7);
     Constants.solenoid = solenoid;
     compressor.start();
+
+    Constants.intakeMotor.setInverted(false);
+    Constants.innerIntake1.setInverted(false);
+    Constants.innerIntake2.setInverted(false);
+    Constants.conveyorMotor.setInverted(false);
   }
 
   public double angle = 0;
@@ -191,11 +196,11 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
-    if (ahrs.getAngle() - angle >= 5) {
-      System.out.println(ahrs.getAngle());
-    }
+    // if (ahrs.getAngle() - angle >= 5) {
+    //   System.out.println(ahrs.getAngle());
+    // }
 
-    angle = ahrs.getAngle();
+    // angle = ahrs.getAngle();
 
     final double leftPOV = xBoxController.getPOV(0);
     if (leftPOV == 0) {
@@ -215,8 +220,9 @@ public class Robot extends TimedRobot {
       conveyorMotor.set(0);
       compressor.start();
       compressor.setClosedLoopControl(true);
-      Constants.solenoid.set(DoubleSolenoid.Value.kForward);
+      //Constants.solenoid.set(DoubleSolenoid.Value.kForward);
     }
+    
 
     SmartDashboard.putNumber("Left POV", leftPOV);
     SmartDashboard.putNumber("Motor multiplier", Constants.increaseIntakeBy);
@@ -298,12 +304,19 @@ public class Robot extends TimedRobot {
     // if (m_autonomousCommand != null) {
     //   m_autonomousCommand.cancel();
     // }
+    conveyorMotor.set(0);
+    shooterMotor.set(ControlMode.PercentOutput, 0);
+    intakeMotor.set(0);
+    innerIntake1.set(0);
+    innerIntake2.set(0);
   }
 
   /**
    * This function is called periodically during operator control.
    */
   boolean intakePressed = false;
+  boolean reversePressed = false;
+  boolean reverse = false;
   @Override
   public void teleopPeriodic() {
     //Get instances of motors
@@ -324,17 +337,22 @@ public class Robot extends TimedRobot {
     final double leftPosition = Constants.xBoxController.getTriggerAxis(Hand.kLeft);
 
     if (xBoxController.getRawButton(Constants.intakeBackward)) {
-      if (Constants.intakeMotor.getInverted()) {
-        Constants.intakeMotor.setInverted(false);
-        Constants.innerIntake1.setInverted(false);
-        Constants.innerIntake2.setInverted(false);
-        Constants.conveyorMotor.setInverted(false);
+      if (reversePressed == false) {
+        reverse = true;
+        intakeMotor.setInverted(true);
+        conveyorMotor.setInverted(false);
+        intakeMotor.set(Constants.intakeSpeed);
+        conveyorMotor.set(Constants.conveyorSpeed);
+        reversePressed = true;
       }
-      else {
-        Constants.intakeMotor.setInverted(true);
-        Constants.innerIntake1.setInverted(true);
-        Constants.innerIntake2.setInverted(true);
-        Constants.conveyorMotor.setInverted(true);
+    }
+    else {
+      if (reversePressed) {
+        intakeMotor.setInverted(false);
+        conveyorMotor.setInverted(true);
+        intakeMotor.set(0);
+        conveyorMotor.set(0);
+        reversePressed = false;
       }
     }
 

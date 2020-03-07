@@ -96,6 +96,7 @@ public final class Constants {
   public static final int invertClimber = 8; //xbox
   public static final int stopCompressor = 7; //xbox
   public static final int fireSolenoid = 4; //xbox
+  public static final int retractSolenoid = 3; //xbox
 
   //Status/mode information
   public static int driveMode = 0;

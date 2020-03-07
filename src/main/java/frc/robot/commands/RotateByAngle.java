@@ -31,33 +31,35 @@ public class RotateByAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double currentAngle = Robot.ahrs.getAngle();
-    if (!direction) {
-      degrees *= -1;
-    }
-    double targetAngle = currentAngle + degrees;
+    // double currentAngle = Robot.ahrs.getAngle();
+    // if (!direction) {
+    //   degrees *= -1;
+    // }
+    // double targetAngle = currentAngle + degrees;
     
-    if (direction) {
-      while (Robot.ahrs.getAngle() < targetAngle) {
-        Constants.frontLeft.set(ControlMode.PercentOutput, 0.3);
-        Constants.frontRight.set(ControlMode.PercentOutput, 0.3);
-        Constants.backLeft.set(ControlMode.PercentOutput, 0.3);
-        Constants.backRight.set(ControlMode.PercentOutput, 0.3);
-      }
-    }
-    else {
-      while (Robot.ahrs.getAngle() > targetAngle) {
-        Constants.frontLeft.set(ControlMode.PercentOutput, -0.3);
-        Constants.frontRight.set(ControlMode.PercentOutput, -0.3);
-        Constants.backLeft.set(ControlMode.PercentOutput, -0.3);
-        Constants.backRight.set(ControlMode.PercentOutput, -0.3);
-      }
-    }
+    // if (direction) {
+    //   while (Robot.ahrs.getAngle() < targetAngle) {
+    //     Constants.frontLeft.set(ControlMode.PercentOutput, 0.3);
+    //     Constants.frontRight.set(ControlMode.PercentOutput, 0.3);
+    //     Constants.backLeft.set(ControlMode.PercentOutput, 0.3);
+    //     Constants.backRight.set(ControlMode.PercentOutput, 0.3);
+    //   }
+    // }
+    // else {
+    //   while (Robot.ahrs.getAngle() > targetAngle) {
+    //     Constants.frontLeft.set(ControlMode.PercentOutput, -0.3);
+    //     Constants.frontRight.set(ControlMode.PercentOutput, -0.3);
+    //     Constants.backLeft.set(ControlMode.PercentOutput, -0.3);
+    //     Constants.backRight.set(ControlMode.PercentOutput, -0.3);
+    //   }
+    // }
 
-    Constants.frontLeft.set(ControlMode.PercentOutput, 0);
-    Constants.frontRight.set(ControlMode.PercentOutput, 0);
-    Constants.backLeft.set(ControlMode.PercentOutput, 0);
-    Constants.backRight.set(ControlMode.PercentOutput, 0);
+    // Constants.frontLeft.set(ControlMode.PercentOutput, 0);
+    // Constants.frontRight.set(ControlMode.PercentOutput, 0);
+    // Constants.backLeft.set(ControlMode.PercentOutput, 0);
+    // Constants.backRight.set(ControlMode.PercentOutput, 0);
+
+    // finished = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
