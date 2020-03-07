@@ -113,7 +113,8 @@ public class Robot extends TimedRobot {
 
     CameraServer.getInstance().startAutomaticCapture();
 
-    conveyorMotor.setInverted(true);
+    conveyorMotor.setInverted(false);
+    intakeMotor.setInverted(true);
 
     //ahrs = new AHRS(SerialPort.Port.kMXP);
 
@@ -176,8 +177,8 @@ public class Robot extends TimedRobot {
     Constants.solenoid = solenoid;
     compressor.start();
 
-    Constants.intakeMotor.setInverted(false);
-    Constants.conveyorMotor.setInverted(false);
+    // Constants.intakeMotor.setInverted(false);
+    // Constants.conveyorMotor.setInverted(false);
   }
 
   public double angle = 0;
@@ -237,9 +238,13 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     //Move off of initiation line
     double startTime = Timer.getFPGATimestamp();
+    compressor.stop();
+
+    conveyorMotor.setInverted(true);
+    intakeMotor.setInverted(false);
 
     SmartDashboard.putNumber("First leg", 38);
-    SmartDashboard.putNumber("Second leg", 45);
+    SmartDashboard.putNumber("Second leg", 38);
 
     frontLeft.setInverted(false);
     frontRight.setInverted(false);
@@ -260,7 +265,7 @@ public class Robot extends TimedRobot {
     }
     setMotor(0, 0, 0, 0);
 
-    shooterMotor.set(ControlMode.PercentOutput, Constants.maximumIntakePower);
+    //shooterMotor.set(ControlMode.PercentOutput, Constants.maximumIntakePower);
     Timer.delay(1.5);
     conveyorMotor.set(Constants.conveyorSpeed);
     intakeMotor.set(Constants.intakeSpeed);
@@ -293,6 +298,13 @@ public class Robot extends TimedRobot {
     shooterMotor.set(ControlMode.PercentOutput, 0);
     intakeMotor.set(0);
     Constants.motorMultiplier = 1;
+
+    frontLeft.setInverted(true);
+    frontRight.setInverted(true);
+    backLeft.setInverted(true);
+    backRight.setInverted(true);
+
+    compressor.start();
   }
 
   /**
