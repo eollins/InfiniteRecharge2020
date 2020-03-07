@@ -70,8 +70,6 @@ public class Robot extends TimedRobot {
   private XboxController xBoxController;
 
   private VictorSP conveyorMotor;
-  private Talon innerIntake1;
-  private Talon innerIntake2;
 
   private Encoder encoder;
   private Compressor compressor;
@@ -110,18 +108,11 @@ public class Robot extends TimedRobot {
     Constants.intakeMotor = intakeMotor;
     shooterMotor = new TalonSRX(Constants.shooterMotorPort);
     Constants.shooterMotor = shooterMotor;
-    innerIntake1 = new Talon(Constants.innerIntake1Port);
-    Constants.innerIntake1 = innerIntake1;
-    innerIntake2 = new Talon(Constants.innerIntake2Port);
-    Constants.innerIntake2 = innerIntake2;
     conveyorMotor = new VictorSP(Constants.conveyorMotorPort);
     Constants.conveyorMotor = conveyorMotor;
 
-
     CameraServer.getInstance().startAutomaticCapture();
-    //drive = new DifferentialDrive(new SpeedControllerGroup((SpeedController)frontLeft, (SpeedController)backLeft), new SpeedControllerGroup((SpeedController)backLeft, (SpeedController)backRight));
 
-    innerIntake1.setInverted(true);
     conveyorMotor.setInverted(true);
 
     //ahrs = new AHRS(SerialPort.Port.kMXP);
@@ -186,8 +177,6 @@ public class Robot extends TimedRobot {
     compressor.start();
 
     Constants.intakeMotor.setInverted(false);
-    Constants.innerIntake1.setInverted(false);
-    Constants.innerIntake2.setInverted(false);
     Constants.conveyorMotor.setInverted(false);
   }
 
@@ -208,13 +197,9 @@ public class Robot extends TimedRobot {
     }
     if (leftPOV == 90) {
       intakeMotor.set(Constants.intakeSpeed);
-      innerIntake1.set(Constants.innerSpeed);
-      innerIntake2.set(Constants.innerSpeed);
     }
     if (leftPOV == 270) {
       intakeMotor.set(0);
-      innerIntake1.set(0);
-      innerIntake2.set(0);
     }
     if (leftPOV == 180) {
       conveyorMotor.set(0);
@@ -276,8 +261,6 @@ public class Robot extends TimedRobot {
     shooterMotor.set(ControlMode.PercentOutput, Constants.maximumIntakePower);
     conveyorMotor.set(Constants.conveyorSpeed);
     Timer.delay(1.5);
-    innerIntake1.set(Constants.innerSpeed);
-    innerIntake2.set(Constants.innerSpeed);
     intakeMotor.set(Constants.intakeSpeed);
   }
 
@@ -307,8 +290,6 @@ public class Robot extends TimedRobot {
     conveyorMotor.set(0);
     shooterMotor.set(ControlMode.PercentOutput, 0);
     intakeMotor.set(0);
-    innerIntake1.set(0);
-    innerIntake2.set(0);
   }
 
   /**
@@ -360,8 +341,6 @@ public class Robot extends TimedRobot {
     if (xBoxController.getRawButton(Constants.intakeForward)) {
       if (intakePressed == false) {
         Constants.intakeMotor.set(Constants.intakeSpeed);
-        Constants.innerIntake1.set(Constants.innerSpeed);
-        Constants.innerIntake2.set(Constants.innerSpeed);
         Constants.conveyorMotor.set(Constants.conveyorSpeed);
         intakePressed = true;
       }
@@ -369,8 +348,6 @@ public class Robot extends TimedRobot {
     else {
       if (intakePressed == true) {
         Constants.intakeMotor.set(0);
-        Constants.innerIntake1.set(0);
-        Constants.innerIntake2.set(0);
         Constants.conveyorMotor.set(0);
         intakePressed = false;
       }
@@ -419,14 +396,10 @@ public class Robot extends TimedRobot {
     if (xBoxController.getRawButton(Constants.intakeBackward)) {
       if (intakeMotor.get() == Constants.intakeSpeed) {
         intakeMotor.set(0);
-        innerIntake1.set(0);
-        innerIntake2.set(0);
         conveyorMotor.set(0);
       }
       else {
         intakeMotor.set(Constants.intakeSpeed);
-        innerIntake1.set(Constants.innerSpeed);
-        innerIntake2.set(Constants.innerSpeed);
         conveyorMotor.set(Constants.conveyorSpeed);
       }
     }
