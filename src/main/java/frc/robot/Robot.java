@@ -236,6 +236,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //Move off of initiation line
+    double startTime = Timer.getFPGATimestamp();
+
     SmartDashboard.putNumber("First leg", 38);
     SmartDashboard.putNumber("Second leg", 45);
 
@@ -245,22 +247,22 @@ public class Robot extends TimedRobot {
     backRight.setInverted(false);
 
     double startingDist = encoder.getDistance();
-    while (Math.abs(encoder.getDistance()) < startingDist + SmartDashboard.getNumber("First leg", 38)) {
+    while (Math.abs(encoder.getDistance()) < startingDist + SmartDashboard.getNumber("First leg", 38) && (Timer.getFPGATimestamp() - startTime) < 5) {
       setMotor(0.3, -0.3, 0.3, -0.3);
       System.out.println("First leg: " + encoder.getDistance());
     }
     setMotor(0, 0, 0, 0);
 
     startingDist = encoder.getDistance();
-    while (Math.abs(encoder.getDistance()) < startingDist + SmartDashboard.getNumber("Second leg", 62.5)) {
+    while (Math.abs(encoder.getDistance()) < startingDist + SmartDashboard.getNumber("Second leg", 62.5) && (Timer.getFPGATimestamp() - startTime < 10)) {
       setMotor(0.3, 0.3, 0.3, 0.3);
       System.out.println("Second leg: " + encoder.getDistance());
     }
     setMotor(0, 0, 0, 0);
 
     shooterMotor.set(ControlMode.PercentOutput, Constants.maximumIntakePower);
-    conveyorMotor.set(Constants.conveyorSpeed);
     Timer.delay(1.5);
+    conveyorMotor.set(Constants.conveyorSpeed);
     intakeMotor.set(Constants.intakeSpeed);
   }
 
@@ -290,6 +292,7 @@ public class Robot extends TimedRobot {
     conveyorMotor.set(0);
     shooterMotor.set(ControlMode.PercentOutput, 0);
     intakeMotor.set(0);
+    Constants.motorMultiplier = 1;
   }
 
   /**
